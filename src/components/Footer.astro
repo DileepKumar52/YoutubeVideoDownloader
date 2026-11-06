@@ -1,0 +1,48 @@
+---
+// src/components/Footer.astro
+---
+
+<footer class="w-full border-t border-[#ebebeb] bg-[#fafafa] py-12 mt-auto">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[#ebebeb]">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-5 h-5 rounded bg-[#171717] flex items-center justify-center text-white text-xs">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-2.5 h-2.5 ml-0.5">
+              <path d="M8 5.14v14l11-7-11-7z" />
+            </svg>
+          </div>
+          <span class="text-sm font-semibold text-[#171717] tracking-tight">StreamFetch</span>
+        </div>
+        <p class="text-xs text-[#8f8f8f] max-w-md leading-relaxed">
+          A minimalist developer-grade media utility for downloading video and audio streams from YouTube where authorized.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-6 text-xs text-[#4d4d4d]">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#171717]"></span>
+          <span>Zero Logging</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#171717]"></span>
+          <span>Direct Stream Piping</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#171717]"></span>
+          <span>Open Standards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] text-[#8f8f8f]">
+      <p class="max-w-2xl leading-relaxed">
+        <strong>Legal & Terms Notice:</strong> This service is intended strictly for personal archiving, educational research, and downloading content you own or that is released under permissive licenses (e.g. Creative Commons). We do not host, store, or index copyrighted materials. All video content remains the property of its respective creators and YouTube.
+      </p>
+      <div class="shrink-0 font-mono text-[#a1a1a1]">
+        Built with Astro & Geist
+      </div>
+    </div>
+  </div>
+</footer>
+

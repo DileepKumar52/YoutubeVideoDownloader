@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #fafafa;
+  --color-canvas-elevated: #ffffff;
+  --color-ink: #171717;
+  --color-body: #4d4d4d;
+  --color-mute: #8f8f8f;
+  --color-faint: #a1a1a1;
+  --color-hairline: #ebebeb;
+  --color-hairline-soft: #f2f2f2;
+  --color-link: #0070f3;
+  --color-link-deep: #0761d1;
+  --color-link-soft: #d3e5ff;
+  --color-error: #ee0000;
+  --color-error-deep: #c50000;
+
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Hero mesh gradient bloom adhering to DESIGN.md */
+.mesh-gradient-hero {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;
+  height: 480px;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse 600px 300px at 20% 0%, rgba(0, 223, 216, 0.15), transparent 70%),
+    radial-gradient(ellipse 500px 350px at 50% 10%, rgba(121, 40, 202, 0.12), transparent 70%),
+    radial-gradient(ellipse 450px 300px at 80% 0%, rgba(255, 0, 128, 0.10), transparent 70%),
+    radial-gradient(ellipse 600px 250px at 50% -10%, rgba(0, 112, 243, 0.14), transparent 60%);
+  filter: blur(40px);
+  z-index: 0;
+}
+
+/* Technical eyebrow from DESIGN.md */
+.mono-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Display XL tracking (-2.4px at 48px) */
+.display-xl {
+  font-family: var(--font-sans);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -2.4px;
+}
+
+/* Heading LG tracking (-1.28px at 32px) */
+.heading-lg {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px;
+  letter-spacing: -1.28px;
+}
+
+/* Heading MD tracking (-0.4px at 20px) */
+.heading-md {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.4px;
+}
+

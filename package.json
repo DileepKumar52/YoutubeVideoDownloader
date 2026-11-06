@@ -12,6 +12,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.4.7"
+    "@astrojs/node": "^11.1.11",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.7",
+    "tailwindcss": "^4.3.5",
+    "youtubei.js": "^18.3.0"
   }
 }

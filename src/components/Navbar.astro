@@ -1,0 +1,38 @@
+---
+// src/components/Navbar.astro
+---
+
+<header class="w-full bg-[#fafafa]/80 backdrop-blur-md border-b border-[#ebebeb] sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <!-- Brand / Logo -->
+    <a href="/" class="flex items-center gap-2.5 text-[#171717] font-semibold text-base tracking-tight hover:opacity-90 transition-opacity">
+      <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white shadow-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5">
+          <path d="M8 5.14v14l11-7-11-7z" />
+        </svg>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="tracking-tight text-sm sm:text-base">StreamFetch</span>
+        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#8f8f8f] border border-[#ebebeb]">v1.0</span>
+      </div>
+    </a>
+
+    <!-- Status & Info -->
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-1.5 text-xs text-[#8f8f8f] font-mono">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span>Engine Active</span>
+      </div>
+
+      <div class="h-4 w-[1px] bg-[#ebebeb] hidden sm:block"></div>
+
+      <div class="text-xs text-[#8f8f8f] font-mono uppercase tracking-wider">
+        No Auth • No Ads
+      </div>
+    </div>
+  </div>
+</header>
+
