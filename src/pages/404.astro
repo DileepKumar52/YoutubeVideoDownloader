@@ -1,52 +1,71 @@
 ---
+// src/pages/404.astro
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
 
-// Set HTTP 404 status
 if (Astro.response) {
   Astro.response.status = 404;
 }
+
+// Detect language from URL path if user hit a 404 under e.g. /es/something
+const segments = Astro.url.pathname.split('/').filter(Boolean);
+let currentLocale: SupportedLocale = DEFAULT_LOCALE;
+if (segments.length > 0 && SUPPORTED_LOCALES.includes(segments[0] as SupportedLocale)) {
+  currentLocale = segments[0] as SupportedLocale;
+}
+
+const t = getTranslations(currentLocale);
+const err = t.error404;
+const homeUrl = getLocalizedPath('/', currentLocale);
+const downloaderUrl = `${homeUrl}#downloader`;
 ---
 
 <Layout
-  title="Page Not Found (404) — YouTube Video Downloader"
-  description="The page you requested could not be found on YouTube Video Downloader."
+  title={t.meta.error404.title}
+  description={t.meta.error404.description}
   noindex={true}
+  locale={currentLocale}
 >
-  <Navbar />
+  <Navbar locale={currentLocale} />
 
   <main class="flex-1 flex items-center justify-center max-w-xl mx-auto px-4 sm:px-6 py-20 w-full text-center">
     <div class="bg-white border border-[#ebebeb] rounded-2xl p-8 sm:p-10 shadow-xs w-full">
       <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#fafafa] border border-[#ebebeb] text-[#171717] font-mono font-bold text-xl mb-4">
-        404
+        {err.badge}
       </div>
 
       <h1 class="heading-md text-[#171717] mb-2">
-        Page Not Found
+        {err.title}
       </h1>
 
       <p class="text-xs sm:text-sm text-[#4d4d4d] leading-relaxed mb-6">
-        The link you followed may be broken, or the page may have been moved or removed.
+        {err.desc}
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
-          href="/"
+          href={homeUrl}
           class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
         >
-          Return to Homepage
+          {err.returnHome}
         </a>
         <a
-          href="/#downloader"
+          href={downloaderUrl}
           class="w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#ebebeb] bg-[#fafafa] hover:bg-[#f2f2f2] text-[#171717] text-xs font-medium tracking-tight transition-all"
         >
-          Open Downloader Tool
+          {err.openDownloader}
         </a>
       </div>
     </div>
   </main>
 
-  <Footer />
+  <Footer locale={currentLocale} />
 </Layout>
-

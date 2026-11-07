@@ -1,5 +1,12 @@
 ---
 import '../styles/global.css';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  LOCALES,
+  SUPPORTED_LOCALES,
+  getHreflangTags,
+} from '../i18n/locales';
 
 interface Props {
   title?: string;
@@ -9,6 +16,7 @@ interface Props {
   ogImage?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
   noindex?: boolean;
+  locale?: SupportedLocale;
 }
 
 const {
@@ -19,11 +27,19 @@ const {
   ogImage = '/favicon.svg',
   jsonLd,
   noindex = false,
+  locale = DEFAULT_LOCALE,
 } = Astro.props;
 
 const siteUrl = Astro.site ? Astro.site.origin : 'https://youtubevideodownloader.app';
 const currentCanonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href.replace(/\/$/, '') || siteUrl;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+const currentLocaleMeta = LOCALES[locale] || LOCALES[DEFAULT_LOCALE];
+const otherLocaleMetas = SUPPORTED_LOCALES
+  .filter((l) => l !== locale)
+  .map((l) => LOCALES[l]);
+
+const hreflangLinks = noindex ? [] : getHreflangTags(Astro.url.pathname, siteUrl);
 
 const structuredDataArray = jsonLd
   ? Array.isArray(jsonLd)
@@ -33,7 +49,7 @@ const structuredDataArray = jsonLd
 ---
 
 <!doctype html>
-<html lang="en" class="h-full bg-[#fafafa] scroll-smooth">
+<html lang={locale} class="h-full bg-[#fafafa] scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,6 +68,11 @@ const structuredDataArray = jsonLd
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     )}
 
+    <!-- Hreflang Multi-Language Alternates -->
+    {hreflangLinks.map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={currentCanonical} />
@@ -59,7 +80,10 @@ const structuredDataArray = jsonLd
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:site_name" content="YouTube Video Downloader" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={currentLocaleMeta.ogLocale} />
+    {otherLocaleMetas.map((alt) => (
+      <meta property="og:locale:alternate" content={alt.ogLocale} />
+    ))}
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />

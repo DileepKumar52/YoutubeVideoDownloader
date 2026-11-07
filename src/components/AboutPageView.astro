@@ -1,0 +1,120 @@
+---
+// src/components/AboutPageView.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from './Navbar.astro';
+import Footer from './Footer.astro';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+const a = t.about;
+const canonicalUrl = `https://youtubevideodownloader.app${getLocalizedPath('/about', locale)}`;
+const homeUrl = getLocalizedPath('/', locale);
+
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: a.title,
+  description: t.meta.about.description,
+  url: canonicalUrl,
+  inLanguage: locale,
+};
+---
+
+<Layout
+  title={t.meta.about.title}
+  description={t.meta.about.description}
+  canonicalUrl={canonicalUrl}
+  jsonLd={aboutJsonLd}
+  locale={locale}
+>
+  <Navbar locale={locale} />
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full">
+    <!-- Breadcrumb & Header -->
+    <div class="mb-10 text-center max-w-2xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
+        <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{a.eyebrow}</span>
+      </div>
+      <h1 class="heading-lg text-[#171717] mb-3">
+        {a.title}
+      </h1>
+      <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed">
+        {a.subtitle}
+      </p>
+    </div>
+
+    <div class="space-y-8 text-sm sm:text-base text-[#4d4d4d] leading-relaxed">
+      <!-- Mission Card -->
+      <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
+        <h2 class="heading-md text-[#171717] mb-3">{a.missionTitle}</h2>
+        <p class="mb-4">
+          {a.missionP1}
+        </p>
+        <p>
+          {a.missionP2}
+        </p>
+      </section>
+
+      <!-- Architecture Card -->
+      <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
+        <h2 class="heading-md text-[#171717] mb-3">{a.techTitle}</h2>
+        <p class="mb-4">
+          {a.techP1}
+        </p>
+        <p class="mb-4">
+          {a.techP2}
+        </p>
+        <ul class="space-y-2.5 my-4 text-xs sm:text-sm text-[#171717]">
+          {a.techPoints.map((pt) => (
+            <li class="flex items-start gap-2.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#0070f3] mt-2 shrink-0"></span>
+              <span><strong>{pt.title}</strong> {pt.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Privacy & Principles -->
+      <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
+        <h2 class="heading-md text-[#171717] mb-3">{a.principlesTitle}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          {a.principles.map((pr) => (
+            <div class="p-4 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
+              <h3 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-1">{pr.title}</h3>
+              <p class="text-xs text-[#8f8f8f] leading-normal">
+                {pr.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Call to Action -->
+      <div class="text-center pt-4">
+        <a
+          href={`${homeUrl}#downloader`}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#171717] hover:bg-black text-white text-xs sm:text-sm font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
+        >
+          <span>{a.ctaBtn}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
+

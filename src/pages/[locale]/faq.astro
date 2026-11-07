@@ -1,0 +1,20 @@
+---
+// src/pages/[locale]/faq.astro
+import FaqPageView from '../../components/FaqPageView.astro';
+import {
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../../i18n/locales';
+
+export const prerender = false;
+
+const { locale } = Astro.params;
+
+if (!locale || !SUPPORTED_LOCALES.includes(locale as SupportedLocale) || locale === DEFAULT_LOCALE) {
+  return Astro.redirect('/faq');
+}
+---
+
+<FaqPageView locale={locale as SupportedLocale} />
+

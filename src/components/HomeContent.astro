@@ -1,18 +1,31 @@
 ---
 // src/components/HomeContent.astro
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+const g = t.guide;
 ---
 
 <article class="w-full max-w-4xl mx-auto px-4 sm:px-6 py-12 text-[#171717] border-t border-[#ebebeb]">
   <!-- Header Eyebrow -->
   <div class="mb-10 text-center max-w-2xl mx-auto">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffffff] border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
-      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">Comprehensive Guide</span>
+      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{g.eyebrow}</span>
     </div>
     <h2 class="heading-lg text-[#171717]">
-      Everything You Need to Know About YouTube Video Downloader
+      {g.mainTitle}
     </h2>
     <p class="text-sm text-[#8f8f8f] mt-2">
-      An in-depth guide to downloading YouTube videos, audio extraction, format selection, and device compatibility.
+      {g.mainSubtitle}
     </p>
   </div>
 
@@ -21,13 +34,13 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">1</div>
-        <h3 class="heading-md text-[#171717]">An Introduction to Our Online YouTube Video Downloader</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec1Title}</h3>
       </div>
       <p class="mb-4">
-        YouTube Video Downloader is a free online service engineered for speed, privacy, and media fidelity. Unlike ad-heavy converters or third-party desktop utilities that demand software installation, our tool runs entirely in your web browser. You paste a public video link, inspect available video and audio streams, select your desired resolution, and initiate an immediate download.
+        {g.sec1P1}
       </p>
       <p>
-        The platform was built to solve a pervasive problem across the web: bloated download portals filled with deceptive advertisement banners, malicious popups, artificial throttling, and compulsory user registration. YouTube Video Downloader adopts a minimalist developer aesthetic inspired by the Vercel Geist design system. It operates without tracking cookies, user accounts, or invasive monetization, treating media extraction as an open, streamlined utility.
+        {g.sec1P2}
       </p>
     </section>
 
@@ -35,27 +48,27 @@
     <section id="how-it-works" class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs scroll-mt-20">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">2</div>
-        <h3 class="heading-md text-[#171717]">How the Stream Extraction and Remuxing Pipeline Works</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec2Title}</h3>
       </div>
       <p class="mb-4">
-        To understand why many online downloaders struggle with high-definition video, it helps to understand YouTube's underlying distribution architecture. YouTube organizes media streams into two primary groups:
+        {g.sec2P1}
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
         <div class="p-4 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <h4 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-1">Progressive Streams (Legacy)</h4>
+          <h4 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-1">{g.sec2Card1Title}</h4>
           <p class="text-xs text-[#8f8f8f] leading-normal">
-            Single MP4 container files containing both video and audio multiplexed together. Due to bandwidth optimization, YouTube limits progressive streams to 360p or occasional 720p files.
+            {g.sec2Card1Desc}
           </p>
         </div>
         <div class="p-4 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <h4 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-1">Adaptive DASH Streams (Modern)</h4>
+          <h4 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-1">{g.sec2Card2Title}</h4>
           <p class="text-xs text-[#8f8f8f] leading-normal">
-            Independent, separate streams for high-definition video (1080p, 1440p, 4K) and audio (AAC, Opus). They provide maximum visual quality but require synchronized combining.
+            {g.sec2Card2Desc}
           </p>
         </div>
       </div>
       <p>
-        When you request a 1080p Full HD video on YouTube Video Downloader, our backend server contacts the YouTube Content Delivery Network (CDN), extracts the individual 1080p video stream and the matching high-bitrate AAC audio stream, and executes an on-the-fly, lossless remuxing process using FFmpeg. Using the <code>-c copy</code> stream mode, video and audio packets are synchronized and packaged into a standard MP4 container without re-encoding. This preserves 100% of the original video bitrate, eliminates visual artifacts, and streams the finished file directly to your browser download manager.
+        {g.sec2P2}
       </p>
     </section>
 
@@ -63,42 +76,26 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">3</div>
-        <h3 class="heading-md text-[#171717]">Available Video Quality and Resolution Options</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec3Title}</h3>
       </div>
       <p class="mb-4">
-        YouTube Video Downloader dynamically detects and presents only genuinely available stream options for the requested video. Depending on what the creator uploaded to YouTube, you can select from the following quality tiers:
+        {g.sec3P1}
       </p>
       <ul class="space-y-3 my-4">
-        <li class="flex items-start gap-3">
-          <span class="inline-block mt-1 w-2 h-2 rounded-full bg-[#171717] shrink-0"></span>
-          <div>
-            <strong class="text-[#171717] text-sm">1080p Full HD (1920×1080):</strong>
-            <span class="text-xs text-[#8f8f8f] block mt-0.5">
-              Crisp high-definition video available at 30fps or smooth 60fps where uploaded. Remuxed in real time with 44.1 kHz stereo audio for pristine desktop and home-theater playback.
-            </span>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="inline-block mt-1 w-2 h-2 rounded-full bg-[#171717] shrink-0"></span>
-          <div>
-            <strong class="text-[#171717] text-sm">720p HD (1280×720):</strong>
-            <span class="text-xs text-[#8f8f8f] block mt-0.5">
-              Standard high-definition balance delivering sharp clarity with compact file sizes. Ideal for mobile storage or quick downloads over cellular connections.
-            </span>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="inline-block mt-1 w-2 h-2 rounded-full bg-[#171717] shrink-0"></span>
-          <div>
-            <strong class="text-[#171717] text-sm">480p and 360p Standard Definition:</strong>
-            <span class="text-xs text-[#8f8f8f] block mt-0.5">
-              Legacy resolutions designed for rapid previewing, low data usage, or archiving spoken-word lectures, interviews, and podcasts.
-            </span>
-          </div>
-        </li>
+        {g.sec3Tiers.map((tier) => (
+          <li class="flex items-start gap-3">
+            <span class="inline-block mt-1 w-2 h-2 rounded-full bg-[#171717] shrink-0"></span>
+            <div>
+              <strong class="text-[#171717] text-sm">{tier.title}</strong>
+              <span class="text-xs text-[#8f8f8f] block mt-0.5">
+                {tier.desc}
+              </span>
+            </div>
+          </li>
+        ))}
       </ul>
       <p class="text-xs text-[#8f8f8f]">
-        <em>Note:</em> We do not simulate or upscale resolutions. If a creator originally uploaded a video in 720p, our system will accurately display 720p as the highest available tier rather than manufacturing an artificial 1080p file.
+        <em>{g.sec3Note}</em>
       </p>
     </section>
 
@@ -106,22 +103,22 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">4</div>
-        <h3 class="heading-md text-[#171717]">Supported Video and Audio Formats</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec4Title}</h3>
       </div>
       <p class="mb-4">
-        YouTube Video Downloader focuses on universal, cross-platform container standards so your downloaded media plays immediately across all media players without requiring third-party codecs:
+        {g.sec4P1}
       </p>
       <div class="space-y-4">
         <div class="border-l-2 border-[#171717] pl-4">
-          <h4 class="text-sm font-semibold text-[#171717]">MP4 (MPEG-4 Part 14) with H.264 Video</h4>
+          <h4 class="text-sm font-semibold text-[#171717]">{g.sec4Fmt1Title}</h4>
           <p class="text-xs text-[#8f8f8f] mt-1 leading-normal">
-            The global benchmark for digital video. Playable natively on Windows, macOS, iOS, Android, QuickTime, VLC, and smart TVs without conversion.
+            {g.sec4Fmt1Desc}
           </p>
         </div>
         <div class="border-l-2 border-[#0070f3] pl-4">
-          <h4 class="text-sm font-semibold text-[#171717]">M4A (AAC Audio) & WebM (Opus Audio)</h4>
+          <h4 class="text-sm font-semibold text-[#171717]">{g.sec4Fmt2Title}</h4>
           <p class="text-xs text-[#8f8f8f] mt-1 leading-normal">
-            When you need audio only, YouTube Video Downloader provides direct extraction of original 128 kbps AAC or 160 kbps Opus audio tracks. While users often search for a "youtube video downloader audio wav", extracting YouTube's native M4A/AAC stream preserves the exact original broadcast fidelity without unnecessary re-encoding loss. (WAV is an uncompressed container, so converting a lossy broadcast audio stream to WAV increases file size by 10x without restoring lost high-frequency detail).
+            {g.sec4Fmt2Desc}
           </p>
         </div>
       </div>
@@ -131,10 +128,10 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">5</div>
-        <h3 class="heading-md text-[#171717]">Using the Downloader on Desktop and iPhone / Mobile Devices</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec5Title}</h3>
       </div>
       <p class="mb-4">
-        YouTube Video Downloader is fully responsive and requires no specialized app. Here is how to download on different operating systems:
+        {g.sec5P1}
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -145,13 +142,12 @@
               <line x1="8" y1="21" x2="16" y2="21"></line>
               <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
-            Desktop (Windows, macOS, Linux)
+            {g.sec5DesktopTitle}
           </h4>
           <ol class="text-xs text-[#4d4d4d] space-y-1.5 list-decimal list-inside leading-relaxed">
-            <li>Copy the YouTube video link from your browser address bar.</li>
-            <li>Paste the URL into the input field above and click <strong>Fetch Options</strong>.</li>
-            <li>Select your preferred resolution (e.g., 1080p Full HD) and click <strong>Download</strong>.</li>
-            <li>Your browser will initiate a standard file download into your Downloads folder.</li>
+            {g.sec5DesktopSteps.map((step) => (
+              <li>{step}</li>
+            ))}
           </ol>
         </div>
 
@@ -161,13 +157,12 @@
               <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
               <line x1="12" y1="18" x2="12.01" y2="18"></line>
             </svg>
-            iPhone & iPad (iOS 13+)
+            {g.sec5MobileTitle}
           </h4>
           <ol class="text-xs text-[#4d4d4d] space-y-1.5 list-decimal list-inside leading-relaxed">
-            <li>Open the YouTube app or website, tap <strong>Share</strong>, then tap <strong>Copy link</strong>.</li>
-            <li>Open Safari, visit YouTube Video Downloader, tap the <strong>Paste</strong> button, and tap <strong>Fetch Options</strong>.</li>
-            <li>Tap <strong>Download</strong> on the desired format.</li>
-            <li>Safari will display a native download prompt. Tap <em>Download</em> to save the file directly to your device's <strong>Files</strong> app or iCloud Drive.</li>
+            {g.sec5MobileSteps.map((step) => (
+              <li>{step}</li>
+            ))}
           </ol>
         </div>
       </div>
@@ -177,28 +172,18 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">6</div>
-        <h3 class="heading-md text-[#171717]">Compatibility Across Modern Browsers</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec6Title}</h3>
       </div>
       <p class="mb-4">
-        Because YouTube Video Downloader uses modern W3C Fetch standards and standard HTTP <code>Content-Disposition</code> attachment responses, it maintains comprehensive compatibility with all modern browsers:
+        {g.sec6P1}
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-        <div class="p-3 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <div class="text-xs font-semibold text-[#171717]">Google Chrome</div>
-          <div class="text-[11px] text-[#8f8f8f] mt-0.5">Desktop & Android</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <div class="text-xs font-semibold text-[#171717]">Apple Safari</div>
-          <div class="text-[11px] text-[#8f8f8f] mt-0.5">macOS & iOS</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <div class="text-xs font-semibold text-[#171717]">Mozilla Firefox</div>
-          <div class="text-[11px] text-[#8f8f8f] mt-0.5">All Platforms</div>
-        </div>
-        <div class="p-3 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <div class="text-xs font-semibold text-[#171717]">Microsoft Edge</div>
-          <div class="text-[11px] text-[#8f8f8f] mt-0.5">Windows & Mac</div>
-        </div>
+        {g.sec6Browsers.map((b) => (
+          <div class="p-3 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
+            <div class="text-xs font-semibold text-[#171717]">{b.name}</div>
+            <div class="text-[11px] text-[#8f8f8f] mt-0.5">{b.platforms}</div>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -206,33 +191,21 @@
     <section id="troubleshooting" class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs scroll-mt-20">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">7</div>
-        <h3 class="heading-md text-[#171717]">Common Downloading Issues & Troubleshooting</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec7Title}</h3>
       </div>
       <p class="mb-4">
-        While YouTube Video Downloader strives for seamless operation, occasional stream issues can occur due to platform security parameters. Here are straightforward solutions to common scenarios:
+        {g.sec7P1}
       </p>
 
       <div class="space-y-3">
-        <div class="p-3.5 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <h4 class="text-xs font-semibold text-[#171717]">Private, Unlisted, or Age-Restricted Videos</h4>
-          <p class="text-xs text-[#8f8f8f] mt-1 leading-relaxed">
-            YouTube Video Downloader does not circumvent authentication or private video gates. If a video is set to private, requires age-verification sign-in, or has been removed by the creator, our extraction engine will report that the video is unavailable.
-          </p>
-        </div>
-
-        <div class="p-3.5 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <h4 class="text-xs font-semibold text-[#171717]">Temporary Network Interruption During Download</h4>
-          <p class="text-xs text-[#8f8f8f] mt-1 leading-relaxed">
-            Because media is piped directly from YouTube's CDN, a network drop on your device can pause the stream. If a download stalls, refresh the page and re-initiate the download to receive a fresh stream session token.
-          </p>
-        </div>
-
-        <div class="p-3.5 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
-          <h4 class="text-xs font-semibold text-[#171717]">Browser Popup or Download Permission Prompts</h4>
-          <p class="text-xs text-[#8f8f8f] mt-1 leading-relaxed">
-            Some mobile browsers require manual confirmation before saving files from new websites. Ensure your browser allows file downloads from this website if you do not immediately see the save prompt.
-          </p>
-        </div>
+        {g.sec7Issues.map((issue) => (
+          <div class="p-3.5 rounded-xl bg-[#fafafa] border border-[#ebebeb]">
+            <h4 class="text-xs font-semibold text-[#171717]">{issue.title}</h4>
+            <p class="text-xs text-[#8f8f8f] mt-1 leading-relaxed">
+              {issue.desc}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -240,15 +213,14 @@
     <section class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-7 h-7 rounded-md bg-[#171717] text-white flex items-center justify-center font-mono text-xs font-semibold">8</div>
-        <h3 class="heading-md text-[#171717]">Privacy, Security, and Responsible Usage</h3>
+        <h3 class="heading-md text-[#171717]">{g.sec8Title}</h3>
       </div>
       <p class="mb-4">
-        User privacy is a core architectural tenet of YouTube Video Downloader. We do not maintain user databases, we do not log requested video URLs against IP addresses, and we do not store downloaded video files on our disks. The server acts exclusively as an ephemeral pipe, proxying bytes in memory from source to client and destroying the stream state the instant transfer concludes.
+        {g.sec8P1}
       </p>
       <p class="text-xs text-[#8f8f8f] leading-relaxed">
-        <strong>Responsible Usage Notice:</strong> YouTube creators dedicate substantial time and effort to producing their content. YouTube Video Downloader is provided strictly for personal archiving, educational research, offline study, and downloading content that you own or that is released under open licenses (such as Creative Commons). Please respect intellectual property laws, avoid commercial redistribution without authorization, and support creators on their official channels.
+        <strong>{g.sec8NoticeTitle}</strong> {g.sec8NoticeDesc}
       </p>
     </section>
   </div>
 </article>
-

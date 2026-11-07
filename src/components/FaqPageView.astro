@@ -1,0 +1,128 @@
+---
+// src/components/FaqPageView.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from './Navbar.astro';
+import Footer from './Footer.astro';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+const f = t.faqs;
+const canonicalUrl = `https://youtubevideodownloader.app${getLocalizedPath('/faq', locale)}`;
+const homeDownloaderUrl = `${getLocalizedPath('/', locale)}#downloader`;
+const contactUrl = getLocalizedPath('/contact', locale);
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: locale,
+  mainEntity: f.items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<Layout
+  title={t.meta.faq.title}
+  description={t.meta.faq.description}
+  canonicalUrl={canonicalUrl}
+  jsonLd={faqJsonLd}
+  locale={locale}
+>
+  <Navbar locale={locale} />
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full">
+    <!-- Header -->
+    <div class="mb-10 text-center max-w-2xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
+        <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{f.eyebrow}</span>
+      </div>
+      <h1 class="heading-lg text-[#171717] mb-3">
+        {f.title}
+      </h1>
+      <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed">
+        {f.subtitle}
+      </p>
+    </div>
+
+    <!-- Quick CTA banner -->
+    <div class="mb-10 p-5 rounded-2xl bg-white border border-[#ebebeb] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="text-sm font-semibold text-[#171717]">Ready to download a video?</h2>
+        <p class="text-xs text-[#8f8f8f] mt-0.5">Paste any public YouTube URL on our home tool to access available stream formats.</p>
+      </div>
+      <a
+        href={homeDownloaderUrl}
+        class="shrink-0 px-4 py-2 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
+      >
+        {t.nav.downloader}
+      </a>
+    </div>
+
+    <!-- FAQ Accordion List -->
+    <div class="space-y-4">
+      {f.items.map((faq, index) => (
+        <details
+          class="group bg-white border border-[#ebebeb] hover:border-[#171717]/30 rounded-2xl transition-all shadow-xs overflow-hidden"
+          open={index === 0}
+        >
+          <summary class="flex items-center justify-between gap-4 p-5 sm:p-6 cursor-pointer select-none text-left font-semibold text-sm sm:text-base text-[#171717] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0070f3] rounded-2xl list-none">
+            <span class="flex items-center gap-3">
+              <span class="font-mono text-xs text-[#8f8f8f] shrink-0">0{index + 1}</span>
+              <span>{faq.question}</span>
+            </span>
+            <span class="w-6 h-6 rounded-md bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#8f8f8f] group-open:rotate-180 transition-transform duration-200 shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-6 sm:px-6 sm:pb-7 pt-1 text-xs sm:text-sm text-[#4d4d4d] leading-relaxed border-t border-[#f2f2f2] mt-1">
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <!-- Additional Help Card -->
+    <div class="mt-12 p-6 rounded-2xl bg-white border border-[#ebebeb] shadow-xs text-center">
+      <h2 class="text-sm font-semibold text-[#171717] mb-1">{f.footerText}</h2>
+      <p class="text-xs text-[#8f8f8f] max-w-md mx-auto mb-4 leading-relaxed">
+        Our team is continuously improving stream compatibility. If a specific video fails to process, feel free to report it.
+      </p>
+      <a
+        href={contactUrl}
+        class="inline-flex items-center gap-1.5 text-xs text-[#0070f3] hover:underline font-medium"
+      >
+        <span>{f.contactLinkText}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
+
+<style>
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
+

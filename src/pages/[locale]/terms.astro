@@ -1,0 +1,20 @@
+---
+// src/pages/[locale]/terms.astro
+import TermsPageView from '../../components/TermsPageView.astro';
+import {
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../../i18n/locales';
+
+export const prerender = false;
+
+const { locale } = Astro.params;
+
+if (!locale || !SUPPORTED_LOCALES.includes(locale as SupportedLocale) || locale === DEFAULT_LOCALE) {
+  return Astro.redirect('/terms');
+}
+---
+
+<TermsPageView locale={locale as SupportedLocale} />
+

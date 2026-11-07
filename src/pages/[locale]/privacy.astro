@@ -1,0 +1,20 @@
+---
+// src/pages/[locale]/privacy.astro
+import PrivacyPageView from '../../components/PrivacyPageView.astro';
+import {
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../../i18n/locales';
+
+export const prerender = false;
+
+const { locale } = Astro.params;
+
+if (!locale || !SUPPORTED_LOCALES.includes(locale as SupportedLocale) || locale === DEFAULT_LOCALE) {
+  return Astro.redirect('/privacy');
+}
+---
+
+<PrivacyPageView locale={locale as SupportedLocale} />
+

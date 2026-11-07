@@ -1,6 +1,26 @@
 ---
 // src/components/Footer.astro
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
 const currentYear = new Date().getFullYear();
+
+const homeUrl = getLocalizedPath('/', locale);
+const aboutUrl = getLocalizedPath('/about', locale);
+const contactUrl = getLocalizedPath('/contact', locale);
+const privacyUrl = getLocalizedPath('/privacy', locale);
+const termsUrl = getLocalizedPath('/terms', locale);
+const disclaimerUrl = getLocalizedPath('/disclaimer', locale);
 ---
 
 <footer class="w-full border-t border-[#ebebeb] bg-[#fafafa] py-12 mt-auto">
@@ -9,66 +29,66 @@ const currentYear = new Date().getFullYear();
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-[#ebebeb]">
       <!-- Logo Section -->
       <div class="md:col-span-1">
-        <a href="/" class="inline-flex items-center gap-2.5 text-[#171717] font-semibold tracking-tight hover:opacity-90 transition-opacity">
+        <a href={homeUrl} class="inline-flex items-center gap-2.5 text-[#171717] font-semibold tracking-tight hover:opacity-90 transition-opacity">
           <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white text-xs shrink-0 shadow-xs">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
               <path d="M8 5.14v14l11-7-11-7z" />
             </svg>
           </div>
-          <span class="text-sm font-semibold text-[#171717]">YouTube Video Downloader</span>
+          <span class="text-sm font-semibold text-[#171717]">{t.footer.brand}</span>
         </a>
       </div>
 
       <!-- Product & Tools -->
       <div class="space-y-3">
-        <div class="mono-eyebrow text-[11px] text-[#171717]">Product & Tools</div>
+        <div class="mono-eyebrow text-[11px] text-[#171717]">{t.footer.productTitle}</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
           <li>
-            <a href="/" class="hover:text-[#171717] transition-colors">YouTube Video Downloader</a>
+            <a href={homeUrl} class="hover:text-[#171717] transition-colors">{t.footer.downloaderLink}</a>
           </li>
           <li>
-            <a href="/#downloader" class="hover:text-[#171717] transition-colors">1080p Full HD Tool</a>
+            <a href={`${homeUrl}#downloader`} class="hover:text-[#171717] transition-colors">{t.footer.hdToolLink}</a>
           </li>
           <li>
-            <a href="/#downloader" class="hover:text-[#171717] transition-colors">Audio Extractor (MP4 / M4A)</a>
+            <a href={`${homeUrl}#downloader`} class="hover:text-[#171717] transition-colors">{t.footer.audioExtractorLink}</a>
           </li>
         </ul>
       </div>
 
       <!-- Information -->
       <div class="space-y-3">
-        <div class="mono-eyebrow text-[11px] text-[#171717]">Information</div>
+        <div class="mono-eyebrow text-[11px] text-[#171717]">{t.footer.infoTitle}</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
           <li>
-            <a href="/about" class="hover:text-[#171717] transition-colors">About Us</a>
+            <a href={aboutUrl} class="hover:text-[#171717] transition-colors">{t.footer.aboutLink}</a>
           </li>
           <li>
-            <a href="/contact" class="hover:text-[#171717] transition-colors">Contact Us & Support</a>
+            <a href={contactUrl} class="hover:text-[#171717] transition-colors">{t.footer.contactLink}</a>
           </li>
         </ul>
       </div>
 
       <!-- Legal & Compliance -->
       <div class="space-y-3">
-        <div class="mono-eyebrow text-[11px] text-[#171717]">Legal & Compliance</div>
+        <div class="mono-eyebrow text-[11px] text-[#171717]">{t.footer.legalTitle}</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
           <li>
-            <a href="/privacy" class="hover:text-[#171717] transition-colors">Privacy Policy</a>
+            <a href={privacyUrl} class="hover:text-[#171717] transition-colors">{t.footer.privacyLink}</a>
           </li>
           <li>
-            <a href="/terms" class="hover:text-[#171717] transition-colors">Terms of Service</a>
+            <a href={termsUrl} class="hover:text-[#171717] transition-colors">{t.footer.termsLink}</a>
           </li>
           <li>
-            <a href="/disclaimer" class="hover:text-[#171717] transition-colors">Legal Disclaimer</a>
+            <a href={disclaimerUrl} class="hover:text-[#171717] transition-colors">{t.footer.disclaimerLink}</a>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- Bottom Copyright Only -->
+    <!-- Bottom Copyright -->
     <div class="pt-6 flex items-center justify-between text-xs text-[#8f8f8f]">
       <div>
-        &copy; {currentYear} YouTube Video Downloader. All rights reserved.
+        &copy; {currentYear} {t.footer.brand}. All rights reserved.
       </div>
     </div>
   </div>

@@ -1,56 +1,39 @@
 ---
 // src/components/FaqSection.astro
-export const faqs = [
-  {
-    question: "What is the best YouTube video downloader?",
-    answer: "The best YouTube video downloader is one that delivers genuine high-resolution streams (such as 1080p Full HD) with synchronized audio, maintains strict user privacy by requiring no software installation or user accounts, and operates without intrusive popups or advertisements. YouTube Video Downloader accomplishes this by performing lossless stream remuxing directly and streaming media straight to your browser."
-  },
-  {
-    question: "What is the best free YouTube video downloader?",
-    answer: "YouTube Video Downloader is designed as a completely free online tool. Unlike many download services that throttle download speeds, restrict 1080p downloads behind paid subscriptions, or inject aggressive pop-up advertisements, YouTube Video Downloader provides full-speed downloads, lossless 1080p MP4 remuxing, and direct audio extraction at zero cost and with no registration required."
-  },
-  {
-    question: "How to download video from YouTube?",
-    answer: "Downloading a video with YouTube Video Downloader takes three simple steps: 1) Copy the YouTube video URL from your browser address bar or mobile app. 2) Paste the URL into the input field at the top of YouTube Video Downloader and click 'Fetch Options'. 3) Choose your preferred quality format (e.g. 1080p Full HD, 720p HD, or Audio M4A) and click 'Download'. The file will save directly to your device."
-  },
-  {
-    question: "What is the fastest YouTube video downloader?",
-    answer: "The fastest YouTube downloaders utilize direct stream piping rather than downloading, saving, and re-encoding entire files on a server before transferring them to the user. YouTube Video Downloader pipes media chunks directly from YouTube's CDN through a real-time remuxing process into your browser, delivering near-instant download start times and maximizing your available internet bandwidth."
-  },
-  {
-    question: "Can I download YouTube videos in 1080p Full HD with audio?",
-    answer: "Yes. While YouTube stores 1080p, 1440p, and 4K video as separate video-only streams without sound (DASH streams), YouTube Video Downloader automatically identifies the highest-bitrate 1080p stream and the matching AAC stereo audio stream. It losslessly merges them on-the-fly into a single, fully synchronized MP4 file that plays on any media player."
-  },
-  {
-    question: "How do I download YouTube videos on an iPhone or iPad?",
-    answer: "On iOS devices (iPhone and iPad running iOS 13 or later), open Safari, visit YouTube Video Downloader, paste the video link, and select your format. When you tap 'Download', Safari will present its native download confirmation. The completed MP4 video or M4A audio file will be saved directly into your device's Files app, from which you can save it to your Photos library or share it."
-  },
-  {
-    question: "Can I extract audio in high quality (M4A or WAV)?",
-    answer: "Yes. In the 'Audio Only' tab, you can download the original audio track extracted directly from YouTube's broadcast stream (typically 128 kbps AAC in an M4A container, or 160 kbps Opus in WebM). While users frequently search for WAV audio downloaders, converting lossy web audio into uncompressed WAV merely inflates file size without restoring compressed high frequencies; native M4A provides the exact original fidelity in a lightweight file."
-  },
-  {
-    question: "Is it legal to download videos from YouTube?",
-    answer: "Downloading YouTube videos is legal when you have permission from the copyright owner, when the video is licensed under an open license (such as Creative Commons), or for personal archiving and fair use purposes where permitted by your local jurisdiction. Downloading copyrighted content without authorization violates YouTube's Terms of Service and may infringe applicable copyright laws. YouTube Video Downloader encourages responsible, lawful usage."
-  }
-];
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+const f = t.faqs;
+
+const contactUrl = getLocalizedPath('/contact', locale);
+const aboutUrl = getLocalizedPath('/about', locale);
 ---
 
 <section id="faq" class="w-full max-w-4xl mx-auto px-4 sm:px-6 py-16 scroll-mt-14 border-t border-[#ebebeb]">
   <div class="text-center max-w-2xl mx-auto mb-10">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffffff] border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
-      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">Frequently Asked Questions</span>
+      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{f.eyebrow}</span>
     </div>
     <h2 class="heading-lg text-[#171717]">
-      Common Questions & Answers
+      {f.title}
     </h2>
     <p class="text-sm text-[#8f8f8f] mt-2">
-      Everything you need to know about video resolutions, audio extraction, mobile compatibility, and platform policies.
+      {f.subtitle}
     </p>
   </div>
 
   <div class="space-y-3">
-    {faqs.map((faq, index) => (
+    {f.items.map((faq, index) => (
       <details
         class="faq-item group bg-white border border-[#ebebeb] hover:border-[#171717]/30 rounded-xl transition-all shadow-xs overflow-hidden"
         id={`faq-item-${index}`}
@@ -75,7 +58,7 @@ export const faqs = [
 
   <div class="mt-8 text-center">
     <p class="text-xs text-[#8f8f8f]">
-      Still have questions or technical feedback? Visit our <a href="/contact" class="text-[#0070f3] hover:underline font-medium">Contact Us</a> page or learn more on our <a href="/about" class="text-[#0070f3] hover:underline font-medium">About page</a>.
+      {f.footerText} <a href={contactUrl} class="text-[#0070f3] hover:underline font-medium">{f.contactLinkText}</a> or <a href={aboutUrl} class="text-[#0070f3] hover:underline font-medium">{f.aboutLinkText}</a>.
     </p>
   </div>
 </section>
@@ -86,4 +69,3 @@ export const faqs = [
     display: none;
   }
 </style>
-

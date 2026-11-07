@@ -1,0 +1,240 @@
+---
+// src/components/ContactPageView.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from './Navbar.astro';
+import Footer from './Footer.astro';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+const c = t.contact;
+const canonicalUrl = `https://youtubevideodownloader.app${getLocalizedPath('/contact', locale)}`;
+
+const contactJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: c.title,
+  description: t.meta.contact.description,
+  url: canonicalUrl,
+  inLanguage: locale,
+};
+
+const clientConfig = {
+  statusRequired: c.statusRequired,
+  sendingBtn: c.sendingBtn,
+  sendBtn: c.sendBtn,
+  sendAnotherBtn: c.sendAnotherBtn,
+  successTitle: c.successTitle,
+  successDesc: c.successDesc,
+};
+---
+
+<Layout
+  title={t.meta.contact.title}
+  description={t.meta.contact.description}
+  canonicalUrl={canonicalUrl}
+  jsonLd={contactJsonLd}
+  locale={locale}
+>
+  <Navbar locale={locale} />
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full" data-contact-config={JSON.stringify(clientConfig)}>
+    <!-- Header -->
+    <div class="mb-10 text-center max-w-2xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
+        <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{c.eyebrow}</span>
+      </div>
+      <h1 class="heading-lg text-[#171717] mb-3">
+        {c.title}
+      </h1>
+      <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed">
+        {c.subtitle}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <!-- Contact Info & Guidelines (1 col) -->
+      <div class="space-y-6 md:col-span-1">
+        <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 shadow-xs">
+          <h2 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-3">{c.directSupportTitle}</h2>
+          <div class="space-y-3 text-xs text-[#4d4d4d]">
+            <div>
+              <div class="text-[#8f8f8f] text-[11px]">{c.emailLabel}</div>
+              <a href="mailto:support@youtubevideodownloader.app" class="font-medium text-[#171717] hover:text-[#0070f3] transition-colors">
+                support@youtubevideodownloader.app
+              </a>
+            </div>
+            <div>
+              <div class="text-[#8f8f8f] text-[11px]">{c.responseTimeLabel}</div>
+              <div class="font-medium text-[#171717]">{c.responseTimeVal}</div>
+            </div>
+            <div>
+              <div class="text-[#8f8f8f] text-[11px]">{c.locationLabel}</div>
+              <div class="font-medium text-[#171717]">{c.locationVal}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 shadow-xs">
+          <h2 class="text-xs font-mono font-semibold uppercase text-[#171717] mb-2">{c.bugTipsTitle}</h2>
+          <p class="text-xs text-[#8f8f8f] leading-relaxed mb-3">
+            {c.bugTipsIntro}
+          </p>
+          <ul class="text-xs text-[#4d4d4d] space-y-1.5 list-disc list-inside">
+            {c.bugTips.map((tip) => (
+              <li>{tip}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contact Form (2 cols) -->
+      <div class="md:col-span-2">
+        <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs">
+          <h2 class="heading-md text-[#171717] mb-2">{c.formTitle}</h2>
+          <p class="text-xs text-[#8f8f8f] mb-6">
+            {c.formSubtitle}
+          </p>
+
+          <form id="contact-form" class="space-y-4" onsubmit="return false;">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="contact-name" class="block text-xs font-medium text-[#171717] mb-1.5">
+                  {c.nameLabel} <span class="text-[#ee0000]">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  required
+                  placeholder={c.namePlaceholder}
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-[#ebebeb] bg-[#fafafa] focus:bg-white focus:outline-none focus:border-[#171717] focus:ring-1 focus:ring-[#171717] text-xs text-[#171717] transition-all"
+                />
+              </div>
+
+              <div>
+                <label for="contact-email" class="block text-xs font-medium text-[#171717] mb-1.5">
+                  {c.emailLabelInput} <span class="text-[#ee0000]">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  name="email"
+                  required
+                  placeholder={c.emailPlaceholder}
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-[#ebebeb] bg-[#fafafa] focus:bg-white focus:outline-none focus:border-[#171717] focus:ring-1 focus:ring-[#171717] text-xs text-[#171717] transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="contact-subject" class="block text-xs font-medium text-[#171717] mb-1.5">
+                {c.topicLabel} <span class="text-[#ee0000]">*</span>
+              </label>
+              <select
+                id="contact-subject"
+                name="subject"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl border border-[#ebebeb] bg-[#fafafa] focus:bg-white focus:outline-none focus:border-[#171717] focus:ring-1 focus:ring-[#171717] text-xs text-[#171717] transition-all cursor-pointer"
+              >
+                {c.topicOptions.map((opt) => (
+                  <option value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label for="contact-message" class="block text-xs font-medium text-[#171717] mb-1.5">
+                {c.messageLabel} <span class="text-[#ee0000]">*</span>
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="5"
+                required
+                placeholder={c.messagePlaceholder}
+                class="w-full px-3.5 py-2.5 rounded-xl border border-[#ebebeb] bg-[#fafafa] focus:bg-white focus:outline-none focus:border-[#171717] focus:ring-1 focus:ring-[#171717] text-xs text-[#171717] transition-all"
+              ></textarea>
+            </div>
+
+            <!-- Form Status / Feedback Alert -->
+            <div id="contact-status" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button
+              id="contact-submit-btn"
+              type="submit"
+              class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs cursor-pointer"
+            >
+              {c.sendBtn}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
+
+<script>
+  const mainEl = document.querySelector('main[data-contact-config]');
+  let config = {
+    statusRequired: 'Please fill out all required fields before submitting.',
+    sendingBtn: 'Sending...',
+    sendBtn: 'Send Message',
+    sendAnotherBtn: 'Send Another Message',
+    successTitle: 'Message Received!',
+    successDesc: 'Thank you for your feedback. We have recorded your note and will review it shortly.',
+  };
+
+  if (mainEl) {
+    try {
+      config = { ...config, ...JSON.parse(mainEl.getAttribute('data-contact-config') || '{}') };
+    } catch (e) {
+      // fallback
+    }
+  }
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const statusDiv = document.getElementById('contact-status');
+  const submitBtn = document.getElementById('contact-submit-btn') as HTMLButtonElement | null;
+
+  if (form && statusDiv && submitBtn) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = (document.getElementById('contact-name') as HTMLInputElement)?.value.trim();
+      const email = (document.getElementById('contact-email') as HTMLInputElement)?.value.trim();
+      const message = (document.getElementById('contact-message') as HTMLTextAreaElement)?.value.trim();
+
+      if (!name || !email || !message) {
+        statusDiv.className = 'p-3 rounded-xl text-xs bg-[#fff5f5] border border-[#fecaca] text-[#b91c1c]';
+        statusDiv.textContent = config.statusRequired;
+        statusDiv.classList.remove('hidden');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = config.sendingBtn;
+
+      setTimeout(() => {
+        statusDiv.className = 'p-3 rounded-xl text-xs bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534]';
+        statusDiv.innerHTML = `<strong>${config.successTitle}</strong> ${config.successDesc}`;
+        statusDiv.classList.remove('hidden');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = config.sendAnotherBtn;
+      }, 600);
+    });
+  }
+</script>
+

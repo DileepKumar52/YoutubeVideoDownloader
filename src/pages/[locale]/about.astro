@@ -1,0 +1,20 @@
+---
+// src/pages/[locale]/about.astro
+import AboutPageView from '../../components/AboutPageView.astro';
+import {
+  SUPPORTED_LOCALES,
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../../i18n/locales';
+
+export const prerender = false;
+
+const { locale } = Astro.params;
+
+if (!locale || !SUPPORTED_LOCALES.includes(locale as SupportedLocale) || locale === DEFAULT_LOCALE) {
+  return Astro.redirect('/about');
+}
+---
+
+<AboutPageView locale={locale as SupportedLocale} />
+

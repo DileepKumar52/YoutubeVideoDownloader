@@ -1,8 +1,43 @@
 ---
 // src/components/DownloaderApp.astro
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+
+const clientI18n = {
+  downloadBtn: t.downloader.downloadBtn,
+  downloadingBtn: t.downloader.downloadingBtn,
+  preparingBtn: t.downloader.preparingBtn,
+  directStreamLabel: t.downloader.directStreamLabel,
+  losslessSyncLabel: t.downloader.losslessSyncLabel,
+  progressiveStreamLabel: t.downloader.progressiveStreamLabel,
+  audioTrackLabel: t.downloader.audioTrackLabel,
+  originalFidelityLabel: t.downloader.originalFidelityLabel,
+  noVideoFound: t.downloader.noVideoFound,
+  noAudioFound: t.downloader.noAudioFound,
+  processingBtn: t.hero.processingBtn,
+  fetchBtn: t.hero.fetchBtn,
+  inputRequiredTitle: t.hero.inputRequiredTitle,
+  inputRequiredDesc: t.hero.inputRequiredDesc,
+  errorDefaultTitle: t.hero.errorDefaultTitle,
+  errorDefaultDesc: t.hero.errorDefaultDesc,
+};
 ---
 
-<section id="downloader" class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-12 scroll-mt-20">
+<section
+  id="downloader"
+  class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-12 scroll-mt-20"
+  data-i18n={JSON.stringify(clientI18n)}
+>
   <!-- Mesh Gradient Bloom (DESIGN.md Hero Accent) -->
   <div class="mesh-gradient-hero" aria-hidden="true"></div>
 
@@ -10,15 +45,15 @@
   <div class="relative z-10 text-center max-w-2xl mx-auto mb-10">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffffff] border border-[#ebebeb] text-[#171717] mb-5 shadow-xs">
       <span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>
-      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">1080p Full HD • Audio Extraction • No Ads</span>
+      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">{t.hero.pill}</span>
     </div>
 
     <h1 class="display-xl text-[#171717] mb-4">
-      Free YouTube Video Downloader
+      {t.hero.title}
     </h1>
 
     <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed max-w-xl mx-auto">
-      Download YouTube videos online in 1080p Full HD, 720p HD, or high-bitrate audio directly in your browser. Fast, clean, no accounts, and compatible with desktop, Android, and iPhone.
+      {t.hero.subtitle}
     </p>
   </div>
 
@@ -38,7 +73,7 @@
             type="text"
             autocomplete="off"
             spellcheck="false"
-            placeholder="Paste YouTube URL here (e.g. https://www.youtube.com/watch?v=...)"
+            placeholder={t.hero.placeholder}
             class="w-full bg-transparent border-none text-[#171717] text-sm sm:text-base placeholder-[#8f8f8f] focus:outline-none focus:ring-0"
           />
 
@@ -69,16 +104,16 @@
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
               <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
             </svg>
-            <span class="hidden sm:inline">Paste</span>
+            <span class="hidden sm:inline">{t.hero.pasteBtn}</span>
           </button>
 
-          <!-- Submit Button (Marketing Pill) -->
+          <!-- Submit Button -->
           <button
             id="submit-btn"
             type="submit"
             class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-[#171717] hover:bg-black text-white text-sm font-medium tracking-tight transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-xs cursor-pointer"
           >
-            <span id="submit-btn-text">Fetch Options</span>
+            <span id="submit-btn-text">{t.hero.fetchBtn}</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -98,9 +133,9 @@
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
       </div>
-      <h3 class="text-base font-semibold text-[#171717] mb-1">Inspecting Video Streams</h3>
+      <h3 class="text-base font-semibold text-[#171717] mb-1">{t.hero.loadingTitle}</h3>
       <p class="text-xs text-[#8f8f8f] leading-relaxed">
-        Querying YouTube manifests, resolving format availability, and preparing download options...
+        {t.hero.loadingDesc}
       </p>
     </div>
   </div>
@@ -116,9 +151,9 @@
         </svg>
       </div>
       <div class="flex-1">
-        <h4 class="text-sm font-semibold text-[#991b1b]" id="error-title">Unable to Process Video</h4>
+        <h4 class="text-sm font-semibold text-[#991b1b]" id="error-title">{t.hero.errorDefaultTitle}</h4>
         <p class="text-xs text-[#b91c1c] mt-1 leading-relaxed" id="error-message">
-          Please check the URL and ensure the video is publicly available.
+          {t.hero.errorDefaultDesc}
         </p>
       </div>
       <button
@@ -126,7 +161,7 @@
         type="button"
         class="text-[#991b1b] hover:text-[#7f1d1d] p-1 rounded-md text-xs font-mono cursor-pointer"
       >
-        Dismiss
+        {t.hero.dismissBtn}
       </button>
     </div>
   </div>
@@ -157,24 +192,23 @@
           <!-- Title, Channel, & Stats -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-2">
-              <span class="mono-eyebrow text-[10px] text-[#0070f3] bg-[#d3e5ff]/50 px-2 py-0.5 rounded">Ready for Download</span>
-              <span id="video-id-badge" class="font-mono text-xs text-[#8f8f8f]"></span>
+              <span class="mono-eyebrow text-[10px] text-[#0070f3] bg-[#d3e5ff]/50 px-2 py-0.5 rounded">{t.downloader.readyBadge}</span>
+              <span id="video-id-badge" class="font-mono text-[11px] text-[#8f8f8f]"></span>
             </div>
 
-            <h2 id="video-title" class="text-lg sm:text-xl font-semibold text-[#171717] tracking-tight leading-snug mb-3">
+            <h2 id="video-title" class="heading-md text-[#171717] mb-2 line-clamp-2">
               Video Title
             </h2>
 
-            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#4d4d4d] mb-4">
-              <div class="flex items-center gap-1.5 font-medium text-[#171717]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#8f8f8f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#8f8f8f] mb-4">
+              <div class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span id="video-author">Channel Name</span>
+                <span id="video-author">Channel</span>
               </div>
-
-              <div class="flex items-center gap-1.5 text-[#8f8f8f]">
+              <div class="flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
@@ -190,7 +224,7 @@
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 text-xs text-[#0070f3] hover:underline"
             >
-              <span>Open on YouTube</span>
+              <span>{t.downloader.openOnYoutube}</span>
               <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
@@ -211,7 +245,7 @@
             class="format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#171717] text-white transition-all cursor-pointer shadow-xs"
             data-target="video-list"
           >
-            Video Streams (MP4)
+            {t.downloader.videoTab}
           </button>
           <button
             id="tab-audio"
@@ -219,7 +253,7 @@
             class="format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-[#ebebeb] text-[#4d4d4d] hover:text-[#171717] transition-all cursor-pointer"
             data-target="audio-list"
           >
-            Audio Only (M4A / WebM)
+            {t.downloader.audioTab}
           </button>
         </div>
 
@@ -256,9 +290,9 @@
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-[#171717] mb-1">Direct Stream Piping</h3>
+      <h3 class="text-sm font-semibold text-[#171717] mb-1">{t.features.directStream.title}</h3>
       <p class="text-xs text-[#4d4d4d] leading-relaxed">
-        Streams media chunks directly from YouTube CDN to your browser without long server buffering delays.
+        {t.features.directStream.desc}
       </p>
     </div>
 
@@ -271,9 +305,9 @@
           <line x1="6" y1="18" x2="6.01" y2="18"></line>
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-[#171717] mb-1">Format Flexibility</h3>
+      <h3 class="text-sm font-semibold text-[#171717] mb-1">{t.features.formatFlexibility.title}</h3>
       <p class="text-xs text-[#4d4d4d] leading-relaxed">
-        Select between progressive MP4 video streams or high-bitrate AAC/M4A audio tracks with clear size estimates.
+        {t.features.formatFlexibility.desc}
       </p>
     </div>
 
@@ -284,9 +318,9 @@
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-[#171717] mb-1">Zero Tracking</h3>
+      <h3 class="text-sm font-semibold text-[#171717] mb-1">{t.features.zeroTracking.title}</h3>
       <p class="text-xs text-[#4d4d4d] leading-relaxed">
-        No accounts, no user databases, no persistent logs, and no third-party advertising scripts.
+        {t.features.zeroTracking.desc}
       </p>
     </div>
   </div>
@@ -294,6 +328,34 @@
 
 <script>
   // Client-side controller
+  const downloaderEl = document.getElementById('downloader');
+  let i18nConfig = {
+    downloadBtn: 'Download',
+    downloadingBtn: 'Downloading...',
+    preparingBtn: 'Preparing...',
+    directStreamLabel: 'Direct Stream',
+    losslessSyncLabel: 'Audio + Video (Lossless Sync)',
+    progressiveStreamLabel: 'Progressive Stream',
+    audioTrackLabel: 'Audio track',
+    originalFidelityLabel: 'Original Audio Fidelity',
+    noVideoFound: 'No video streams available for this video. Please check the Audio tab.',
+    noAudioFound: 'No separate audio streams found.',
+    processingBtn: 'Processing...',
+    fetchBtn: 'Fetch Options',
+    inputRequiredTitle: 'Input Required',
+    inputRequiredDesc: 'Please paste a valid YouTube video URL or ID.',
+    errorDefaultTitle: 'Unable to Process Video',
+    errorDefaultDesc: 'Please check the URL and ensure the video is publicly available.',
+  };
+
+  if (downloaderEl && downloaderEl.getAttribute('data-i18n')) {
+    try {
+      i18nConfig = { ...i18nConfig, ...JSON.parse(downloaderEl.getAttribute('data-i18n') || '{}') };
+    } catch (e) {
+      // fallback
+    }
+  }
+
   let currentVideoData = null;
 
   const urlInput = document.getElementById('url-input') as HTMLInputElement | null;
@@ -322,13 +384,17 @@
   const tabAudio = document.getElementById('tab-audio');
   const videoList = document.getElementById('video-list');
   const audioList = document.getElementById('audio-list');
-  const downloadProgressBanner = document.getElementById('download-progress-banner');
-  const downloadStatusText = document.getElementById('download-status-text');
+  const progressBanner = document.getElementById('download-progress-banner');
+  const progressStatusText = document.getElementById('download-status-text');
 
-  // Input events
+  // Input clear button toggle
   if (urlInput && clearBtn) {
     urlInput.addEventListener('input', () => {
-      clearBtn.classList.toggle('hidden', !urlInput.value.trim());
+      if (urlInput.value.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
     });
 
     clearBtn.addEventListener('click', () => {
@@ -338,15 +404,15 @@
     });
   }
 
-  // Paste button
-  if (pasteBtn && urlInput && clearBtn) {
+  // Paste from clipboard handler
+  if (pasteBtn && urlInput) {
     pasteBtn.addEventListener('click', async () => {
       try {
         const text = await navigator.clipboard.readText();
         if (text) {
           urlInput.value = text.trim();
-          clearBtn.classList.remove('hidden');
-          processUrl(urlInput.value);
+          clearBtn?.classList.remove('hidden');
+          processUrl(text.trim());
         }
       } catch (err) {
         urlInput.focus();
@@ -354,7 +420,7 @@
     });
   }
 
-  // Form submit
+  // Form submit handler
   if (urlForm && urlInput) {
     urlForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -362,11 +428,22 @@
     });
   }
 
-  // Dismiss error
+  // Dismiss error handler
   if (dismissErrorBtn && errorContainer) {
     dismissErrorBtn.addEventListener('click', () => {
       errorContainer.classList.add('hidden');
     });
+  }
+
+  function showError(title: string, msg: string) {
+    if (errorTitle) errorTitle.textContent = title || i18nConfig.errorDefaultTitle;
+    if (errorMessage) errorMessage.textContent = msg || i18nConfig.errorDefaultDesc;
+    errorContainer?.classList.remove('hidden');
+    loadingContainer?.classList.add('hidden');
+  }
+
+  function hideError() {
+    errorContainer?.classList.add('hidden');
   }
 
   // Format tab switching
@@ -390,18 +467,17 @@
   async function processUrl(input: string) {
     const trimmed = (input || '').trim();
     if (!trimmed) {
-      showError('Input Required', 'Please paste a valid YouTube video URL or ID.');
+      showError(i18nConfig.inputRequiredTitle, i18nConfig.inputRequiredDesc);
       urlInput?.focus();
       return;
     }
 
-    // Reset states
     hideError();
     resultContainer?.classList.add('hidden');
     loadingContainer?.classList.remove('hidden');
     if (submitBtn && submitBtnText) {
       submitBtn.disabled = true;
-      submitBtnText.textContent = 'Processing...';
+      submitBtnText.textContent = i18nConfig.processingBtn;
     }
 
     try {
@@ -409,18 +485,18 @@
       const json = await res.json();
 
       if (!res.ok || !json.success) {
-        throw new Error(json.error || 'Failed to retrieve video information.');
+        throw new Error(json.error || i18nConfig.errorDefaultDesc);
       }
 
       currentVideoData = json.data;
       renderVideoResult(currentVideoData);
     } catch (err: any) {
-      showError('Extraction Error', err.message || 'An unexpected error occurred while processing the video.');
+      showError(i18nConfig.errorDefaultTitle, err.message || i18nConfig.errorDefaultDesc);
     } finally {
       loadingContainer?.classList.add('hidden');
       if (submitBtn && submitBtnText) {
         submitBtn.disabled = false;
-        submitBtnText.textContent = 'Fetch Options';
+        submitBtnText.textContent = i18nConfig.fetchBtn;
       }
     }
   }
@@ -442,7 +518,7 @@
       if (videoFormats.length === 0) {
         videoList.innerHTML = `
           <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
-            No video streams available for this video. Please check the Audio tab.
+            ${i18nConfig.noVideoFound}
           </div>
         `;
       } else {
@@ -466,9 +542,9 @@
                   ${fmt.fps && fmt.fps >= 50 ? `<span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#d3e5ff] text-[#0070f3] border border-[#b8d6ff] font-medium">${fmt.fps}fps</span>` : ''}
                 </div>
                 <div class="text-xs text-[#8f8f8f] mt-0.5 flex items-center gap-2">
-                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Direct Stream'}</span>
+                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : i18nConfig.directStreamLabel}</span>
                   <span>•</span>
-                  <span>${fmt.isAdaptive ? 'Audio + Video (Lossless Sync)' : 'Progressive Stream'}</span>
+                  <span>${fmt.isAdaptive ? i18nConfig.losslessSyncLabel : i18nConfig.progressiveStreamLabel}</span>
                 </div>
               </div>
             </div>
@@ -480,7 +556,7 @@
               data-type="video"
               data-title="${encodeURIComponent(data.title)}"
             >
-              <span>Download</span>
+              <span>${i18nConfig.downloadBtn}</span>
               <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -501,7 +577,7 @@
       if (audioFormats.length === 0) {
         audioList.innerHTML = `
           <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
-            No separate audio streams found.
+            ${i18nConfig.noAudioFound}
           </div>
         `;
       } else {
@@ -523,9 +599,9 @@
                   <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb] font-medium">${fmt.container}</span>
                 </div>
                 <div class="text-xs text-[#8f8f8f] mt-0.5 flex items-center gap-2">
-                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Audio track'}</span>
+                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : i18nConfig.audioTrackLabel}</span>
                   <span>•</span>
-                  <span>Original Audio Fidelity</span>
+                  <span>${i18nConfig.originalFidelityLabel}</span>
                 </div>
               </div>
             </div>
@@ -537,7 +613,7 @@
               data-type="audio"
               data-title="${encodeURIComponent(data.title)}"
             >
-              <span>Download</span>
+              <span>${i18nConfig.downloadBtn}</span>
               <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -550,57 +626,58 @@
       }
     }
 
-    // Attach click listeners to download buttons
+    // Attach click handlers to all download action buttons
     document.querySelectorAll('.download-action-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const itag = btn.getAttribute('data-itag');
-        const type = btn.getAttribute('data-type') || 'video';
-        if (itag) {
-          triggerDownload(data.id, itag, type);
-        }
+      btn.addEventListener('click', (e) => {
+        const targetBtn = e.currentTarget as HTMLButtonElement;
+        const itag = targetBtn.getAttribute('data-itag');
+        const type = targetBtn.getAttribute('data-type');
+        const title = targetBtn.getAttribute('data-title');
+
+        if (!currentVideoData || !itag) return;
+
+        triggerDownload(currentVideoData.id, itag, type, title, targetBtn);
       });
     });
 
-    if (resultContainer) {
-      resultContainer.classList.remove('hidden');
-      resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    resultContainer?.classList.remove('hidden');
+    resultContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function triggerDownload(id: string, itag: string, type: string) {
-    if (downloadProgressBanner && downloadStatusText) {
-      downloadProgressBanner.classList.remove('hidden');
-      downloadStatusText.textContent = 'Contacting YouTube CDN & transferring stream...';
+  function triggerDownload(
+    videoId: string,
+    itag: string,
+    type: string | null,
+    title: string | null,
+    btn: HTMLButtonElement
+  ) {
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg class="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>${i18nConfig.downloadingBtn}</span>
+    `;
+
+    if (progressBanner) {
+      progressBanner.classList.remove('hidden');
     }
 
-    // Direct browser download prompt via download URL
-    const downloadUrl = `/api/download?id=${encodeURIComponent(id)}&itag=${encodeURIComponent(itag)}&type=${encodeURIComponent(type)}`;
+    const downloadUrl = `/api/download?id=${encodeURIComponent(videoId)}&itag=${encodeURIComponent(itag)}&type=${encodeURIComponent(type || 'video')}`;
 
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.setAttribute('download', '');
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = downloadUrl;
+    document.body.appendChild(iframe);
 
     setTimeout(() => {
-      if (downloadStatusText) {
-        downloadStatusText.textContent = 'Stream requested! Check your browser downloads.';
-      }
-    }, 2500);
-
-    setTimeout(() => {
-      downloadProgressBanner?.classList.add('hidden');
-    }, 10000);
-  }
-
-  function showError(title: string, msg: string) {
-    if (errorTitle) errorTitle.textContent = title;
-    if (errorMessage) errorMessage.textContent = msg;
-    errorContainer?.classList.remove('hidden');
-  }
-
-  function hideError() {
-    errorContainer?.classList.add('hidden');
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 5000);
+    }, 3000);
   }
 </script>

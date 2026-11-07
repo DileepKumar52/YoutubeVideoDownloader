@@ -1,16 +1,39 @@
 ---
 // src/components/Navbar.astro
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isHome = pathname === '/';
+import {
+  type SupportedLocale,
+  DEFAULT_LOCALE,
+  getLocalizedPath,
+  getCleanPath,
+} from '../i18n/locales';
+import { getTranslations } from '../i18n/translations';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale?: SupportedLocale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const t = getTranslations(locale);
+
+const currentPath = Astro.url.pathname;
+const cleanPath = getCleanPath(currentPath);
+const isHome = cleanPath === '/';
+
+const homeUrl = getLocalizedPath('/', locale);
+const aboutUrl = getLocalizedPath('/about', locale);
+const contactUrl = getLocalizedPath('/contact', locale);
+const downloaderUrl = isHome ? '#downloader' : `${homeUrl}#downloader`;
+const faqUrl = isHome ? '#faq' : `${homeUrl}#faq`;
 ---
 
 <header class="w-full bg-[#fafafa]/90 backdrop-blur-md border-b border-[#ebebeb] sticky top-0 z-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
     <!-- Brand / Logo -->
     <a
-      href="/"
+      href={homeUrl}
       class="flex items-center gap-2.5 text-[#171717] font-semibold text-base tracking-tight hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0070f3] rounded-md px-1 py-0.5"
-      aria-label="YouTube Video Downloader Home"
+      aria-label={`${t.nav.brand} Home`}
     >
       <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white shadow-xs shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
@@ -18,85 +41,89 @@ const isHome = pathname === '/';
         </svg>
       </div>
       <span class="tracking-tight text-sm sm:text-base font-semibold text-[#171717] whitespace-nowrap">
-        YouTube Video Downloader
+        {t.nav.brand}
       </span>
     </a>
 
     <!-- Desktop Navigation Links -->
     <nav class="hidden md:flex items-center gap-1 text-sm text-[#4d4d4d]" aria-label="Main Navigation">
       <a
-        href="/"
+        href={homeUrl}
         class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-          pathname === '/'
+          cleanPath === '/'
             ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
         }`}
       >
-        Home
+        {t.nav.home}
       </a>
       <a
-        href={isHome ? '#downloader' : '/#downloader'}
+        href={downloaderUrl}
         class="px-3 py-1.5 rounded-full text-xs font-medium text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] transition-colors"
       >
-        Downloader
+        {t.nav.downloader}
       </a>
       <a
-        href={isHome ? '#faq' : '/#faq'}
+        href={faqUrl}
         class="px-3 py-1.5 rounded-full text-xs font-medium text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] transition-colors"
       >
-        FAQ
+        {t.nav.faq}
       </a>
       <a
-        href="/about"
+        href={aboutUrl}
         class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-          pathname === '/about'
+          cleanPath === '/about'
             ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
         }`}
       >
-        About
+        {t.nav.about}
       </a>
       <a
-        href="/contact"
+        href={contactUrl}
         class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-          pathname === '/contact'
+          cleanPath === '/contact'
             ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
         }`}
       >
-        Contact
+        {t.nav.contact}
       </a>
     </nav>
 
-    <!-- Desktop CTA: Paste Link Button -->
-    <div class="hidden sm:flex items-center gap-3 shrink-0">
+    <!-- Desktop Right Controls: Language Switcher + Paste Link CTA -->
+    <div class="hidden sm:flex items-center gap-2.5 shrink-0">
+      <LanguageSwitcher currentLocale={locale} idPrefix="desktop" />
       <a
-        href={isHome ? '#downloader' : '/#downloader'}
+        href={downloaderUrl}
         class="px-3.5 py-1.5 rounded-md bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
       >
-        Paste Link
+        {t.nav.pasteLink}
       </a>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <button
-      id="mobile-menu-btn"
-      type="button"
-      class="md:hidden p-2 rounded-md text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] border border-[#ebebeb] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0070f3]"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      aria-label="Toggle navigation menu"
-    >
-      <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-      <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="18" x2="18" y2="6"></line>
-      </svg>
-    </button>
+    <!-- Mobile Language Switcher + Mobile Menu Button -->
+    <div class="flex items-center gap-2 sm:hidden">
+      <LanguageSwitcher currentLocale={locale} idPrefix="mobile-bar" />
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="p-2 rounded-md text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] border border-[#ebebeb] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0070f3]"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Toggle navigation menu"
+      >
+        <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="18" x2="18" y2="6"></line>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Mobile Dropdown Menu -->
@@ -106,55 +133,55 @@ const isHome = pathname === '/';
   >
     <nav class="flex flex-col gap-1 text-sm" aria-label="Mobile Navigation">
       <a
-        href="/"
+        href={homeUrl}
         class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
-          pathname === '/'
+          cleanPath === '/'
             ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
         }`}
       >
-        Home
+        {t.nav.home}
       </a>
       <a
-        href={isHome ? '#downloader' : '/#downloader'}
+        href={downloaderUrl}
         class="mobile-nav-link px-3 py-2 rounded-md font-medium text-xs text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa] transition-colors"
       >
-        Downloader Tool
+        {t.nav.downloader}
       </a>
       <a
-        href={isHome ? '#faq' : '/#faq'}
+        href={faqUrl}
         class="mobile-nav-link px-3 py-2 rounded-md font-medium text-xs text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa] transition-colors"
       >
-        Frequently Asked Questions
+        {t.nav.faq}
       </a>
       <a
-        href="/about"
+        href={aboutUrl}
         class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
-          pathname === '/about'
+          cleanPath === '/about'
             ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
         }`}
       >
-        About Us
+        {t.nav.about}
       </a>
       <a
-        href="/contact"
+        href={contactUrl}
         class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
-          pathname === '/contact'
+          cleanPath === '/contact'
             ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
             : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
         }`}
       >
-        Contact Us
+        {t.nav.contact}
       </a>
 
       <div class="pt-3 mt-1 border-t border-[#ebebeb] flex items-center justify-between text-xs text-[#8f8f8f]">
-        <span>No auth • No advertisements</span>
+        <span>1080p • Lossless • Free</span>
         <a
-          href={isHome ? '#downloader' : '/#downloader'}
+          href={downloaderUrl}
           class="mobile-nav-link font-medium text-[#171717] underline decoration-[#ebebeb]"
         >
-          Paste Link
+          {t.nav.pasteLink}
         </a>
       </div>
     </nav>
@@ -176,7 +203,6 @@ const isHome = pathname === '/';
       close.classList.toggle('hidden');
     });
 
-    // Close menu when clicking an anchor link inside mobile menu
     document.querySelectorAll('.mobile-nav-link').forEach((link) => {
       link.addEventListener('click', () => {
         menu.classList.add('hidden');
