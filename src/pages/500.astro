@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+// Set HTTP 500 status
+if (Astro.response) {
+  Astro.response.status = 500;
+}
+---
+
+<Layout
+  title="Server Error (500) — StreamFetch"
+  description="An internal server error occurred while processing your request on StreamFetch."
+  noindex={true}
+>
+  <Navbar />
+
+  <main class="flex-1 flex items-center justify-center max-w-xl mx-auto px-4 sm:px-6 py-20 w-full text-center">
+    <div class="bg-white border border-[#ebebeb] rounded-2xl p-8 sm:p-10 shadow-xs w-full">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#fee2e2] border border-[#fecaca] text-[#ee0000] font-mono font-bold text-xl mb-4">
+        500
+      </div>
+
+      <h1 class="heading-md text-[#171717] mb-2">
+        Internal Server Error
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[#4d4d4d] leading-relaxed mb-6">
+        An unexpected error occurred while processing your request. Our system has logged the diagnostic code and our engineering team is addressing it.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/"
+          class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
+        >
+          Return to Homepage
+        </a>
+        <a
+          href="/contact"
+          class="w-full sm:w-auto px-5 py-2.5 rounded-full border border-[#ebebeb] bg-[#fafafa] hover:bg-[#f2f2f2] text-[#171717] text-xs font-medium tracking-tight transition-all"
+        >
+          Report an Issue
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+

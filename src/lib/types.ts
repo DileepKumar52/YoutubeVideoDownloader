@@ -1,13 +1,16 @@
 export interface VideoFormatOption {
   itag: number;
   type: 'video' | 'audio';
-  quality: string;           // e.g. "720p HD", "360p SD", "128 kbps"
+  quality: string;           // e.g. "1080p Full HD", "720p HD", "360p SD", "128 kbps"
   container: string;         // e.g. "mp4", "m4a", "webm"
   mimeType: string;
   hasAudio: boolean;
   hasVideo: boolean;
+  fps?: number;
   approxSizeMb?: number | null;
   bitrate?: number;
+  isAdaptive?: boolean;      // True if separate video/audio stream
+  requiresMuxing?: boolean;  // True if it needs server-side remuxing with audio
 }
 
 export interface VideoMetadata {
@@ -32,4 +35,3 @@ export interface ApiResponse<T = any> {
   data?: T;
   error?: string;
 }
-

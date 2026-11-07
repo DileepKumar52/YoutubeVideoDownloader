@@ -4,23 +4,69 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  canonicalUrl?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  jsonLd?: Record<string, any> | Array<Record<string, any>>;
+  noindex?: boolean;
 }
 
 const {
-  title = 'YouTube Video & Audio Downloader — Fast, Direct & Clean',
-  description = 'Paste any YouTube URL and download available video or audio formats directly. Zero ads, no account required.',
+  title = 'YouTube Video Downloader — Free, Online 1080p Full HD & Audio',
+  description = 'Free online YouTube Video Downloader. Download YouTube videos in 1080p Full HD, 720p, or high-bitrate audio (MP4/M4A) directly in your browser. Fast, clean, no ads, no sign-up.',
+  canonicalUrl,
+  ogType = 'website',
+  ogImage = '/favicon.svg',
+  jsonLd,
+  noindex = false,
 } = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.origin : 'https://streamfetch.app';
+const currentCanonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href.replace(/\/$/, '') || siteUrl;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+const structuredDataArray = jsonLd
+  ? Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd]
+  : [];
 ---
 
 <!doctype html>
-<html lang="en" class="h-full bg-[#fafafa]">
+<html lang="en" class="h-full bg-[#fafafa] scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
     <meta name="theme-color" content="#171717" />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={currentCanonical} />
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    )}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={currentCanonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="StreamFetch" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={currentCanonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <!-- Google Fonts: Geist & Geist Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,7 +76,10 @@ const {
       rel="stylesheet"
     />
 
-    <title>{title}</title>
+    <!-- Structured Data (JSON-LD) -->
+    {structuredDataArray.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
   </head>
   <body class="min-h-full flex flex-col bg-[#fafafa] text-[#171717] antialiased selection:bg-[#d3e5ff] selection:text-[#0070f3]">
     <slot />

@@ -2,13 +2,67 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import DownloaderApp from '../components/DownloaderApp.astro';
+import HomeContent from '../components/HomeContent.astro';
+import FaqSection, { faqs } from '../components/FaqSection.astro';
 import Footer from '../components/Footer.astro';
+
+// Structured data for Technical SEO
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'StreamFetch',
+  url: 'https://streamfetch.app',
+  description: 'Free online YouTube Video Downloader for 1080p Full HD, 720p HD, and high-bitrate audio extraction.',
+};
+
+const webAppJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'StreamFetch YouTube Video Downloader',
+  url: 'https://streamfetch.app',
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'All (Web Browser, Windows, macOS, Linux, iOS, Android)',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    '1080p Full HD video download with synchronized audio',
+    'High-bitrate audio extraction (M4A / AAC)',
+    'Zero ads, popups, or user account requirements',
+    'Lossless real-time stream remuxing',
+    'Compatible with desktop, Android, and iPhone Safari',
+  ],
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+
+const homepageJsonLd = [websiteJsonLd, webAppJsonLd, faqJsonLd];
 ---
 
-<Layout title="StreamFetch — Minimalist YouTube Video & Audio Downloader">
+<Layout
+  title="YouTube Video Downloader — Free, Online 1080p Full HD & Audio"
+  description="Free online YouTube Video Downloader. Download YouTube videos in 1080p Full HD, 720p, or high-bitrate audio (MP4/M4A) directly in your browser. Fast, clean, no ads, no sign-up."
+  canonicalUrl="https://streamfetch.app"
+  jsonLd={homepageJsonLd}
+>
   <Navbar />
   <main class="flex-1 flex flex-col justify-start">
     <DownloaderApp />
+    <HomeContent />
+    <FaqSection />
   </main>
   <Footer />
 </Layout>

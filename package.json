@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@astrojs/node": "^11.1.11",
+    "@distube/ytdl-core": "^5.2.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.7",
     "tailwindcss": "^4.3.5",

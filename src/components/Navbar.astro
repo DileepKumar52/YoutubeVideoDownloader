@@ -1,38 +1,198 @@
 ---
 // src/components/Navbar.astro
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isHome = pathname === '/';
 ---
 
-<header class="w-full bg-[#fafafa]/80 backdrop-blur-md border-b border-[#ebebeb] sticky top-0 z-40">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+<header class="w-full bg-[#fafafa]/90 backdrop-blur-md border-b border-[#ebebeb] sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
     <!-- Brand / Logo -->
-    <a href="/" class="flex items-center gap-2.5 text-[#171717] font-semibold text-base tracking-tight hover:opacity-90 transition-opacity">
+    <a
+      href="/"
+      class="flex items-center gap-2.5 text-[#171717] font-semibold text-base tracking-tight hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0070f3] rounded-md px-1 py-0.5"
+      aria-label="StreamFetch Home"
+    >
       <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white shadow-xs">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
           <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
       </div>
       <div class="flex items-center gap-1.5">
-        <span class="tracking-tight text-sm sm:text-base">StreamFetch</span>
-        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#8f8f8f] border border-[#ebebeb]">v1.0</span>
+        <span class="tracking-tight text-sm sm:text-base font-semibold text-[#171717]">StreamFetch</span>
+        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#8f8f8f] border border-[#ebebeb]">1080p</span>
       </div>
     </a>
 
-    <!-- Status & Info -->
-    <div class="flex items-center gap-3">
-      <div class="hidden sm:flex items-center gap-1.5 text-xs text-[#8f8f8f] font-mono">
-        <span class="relative flex h-2 w-2">
+    <!-- Desktop Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-sm text-[#4d4d4d]" aria-label="Main Navigation">
+      <a
+        href="/"
+        class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          pathname === '/'
+            ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
+        }`}
+      >
+        Home
+      </a>
+      <a
+        href={isHome ? '#downloader' : '/#downloader'}
+        class="px-3 py-1.5 rounded-full text-xs font-medium text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] transition-colors"
+      >
+        Downloader
+      </a>
+      <a
+        href={isHome ? '#faq' : '/#faq'}
+        class="px-3 py-1.5 rounded-full text-xs font-medium text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] transition-colors"
+      >
+        FAQ
+      </a>
+      <a
+        href="/about"
+        class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          pathname === '/about'
+            ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
+        }`}
+      >
+        About
+      </a>
+      <a
+        href="/contact"
+        class={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          pathname === '/contact'
+            ? 'text-[#171717] bg-[#ebebeb]/60 font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2]'
+        }`}
+      >
+        Contact
+      </a>
+    </nav>
+
+    <!-- Desktop Status Badge & CTA -->
+    <div class="hidden sm:flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-1.5 text-xs text-[#8f8f8f] font-mono">
+        <span class="relative flex h-2 w-2" aria-hidden="true">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
-        <span>Engine Active</span>
+        <span>Online</span>
       </div>
 
-      <div class="h-4 w-[1px] bg-[#ebebeb] hidden sm:block"></div>
+      <div class="h-4 w-[1px] bg-[#ebebeb]"></div>
 
-      <div class="text-xs text-[#8f8f8f] font-mono uppercase tracking-wider">
-        No Auth • No Ads
-      </div>
+      <a
+        href={isHome ? '#downloader' : '/#downloader'}
+        class="px-3.5 py-1.5 rounded-md bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
+      >
+        Paste Link
+      </a>
     </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobile-menu-btn"
+      type="button"
+      class="md:hidden p-2 rounded-md text-[#4d4d4d] hover:text-[#171717] hover:bg-[#f2f2f2] border border-[#ebebeb] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0070f3]"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Toggle navigation menu"
+    >
+      <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="18" x2="18" y2="6"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden border-b border-[#ebebeb] bg-[#ffffff] px-4 pt-2 pb-4 shadow-sm"
+  >
+    <nav class="flex flex-col gap-1 text-sm" aria-label="Mobile Navigation">
+      <a
+        href="/"
+        class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
+          pathname === '/'
+            ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
+        }`}
+      >
+        Home
+      </a>
+      <a
+        href={isHome ? '#downloader' : '/#downloader'}
+        class="mobile-nav-link px-3 py-2 rounded-md font-medium text-xs text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa] transition-colors"
+      >
+        Downloader Tool
+      </a>
+      <a
+        href={isHome ? '#faq' : '/#faq'}
+        class="mobile-nav-link px-3 py-2 rounded-md font-medium text-xs text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa] transition-colors"
+      >
+        Frequently Asked Questions
+      </a>
+      <a
+        href="/about"
+        class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
+          pathname === '/about'
+            ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
+        }`}
+      >
+        About Us
+      </a>
+      <a
+        href="/contact"
+        class={`px-3 py-2 rounded-md font-medium text-xs transition-colors ${
+          pathname === '/contact'
+            ? 'text-[#171717] bg-[#f2f2f2] font-semibold'
+            : 'text-[#4d4d4d] hover:text-[#171717] hover:bg-[#fafafa]'
+        }`}
+      >
+        Contact Us
+      </a>
+
+      <div class="pt-3 mt-1 border-t border-[#ebebeb] flex items-center justify-between text-xs text-[#8f8f8f]">
+        <span>No auth • No advertisements</span>
+        <span class="inline-flex items-center gap-1 font-mono text-[11px] text-emerald-600">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+          Ready
+        </span>
+      </div>
+    </nav>
   </div>
 </header>
 
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const hamburger = document.getElementById('hamburger-icon');
+  const close = document.getElementById('close-icon');
+
+  if (btn && menu && hamburger && close) {
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      menu.classList.toggle('hidden');
+      hamburger.classList.toggle('hidden');
+      close.classList.toggle('hidden');
+    });
+
+    // Close menu when clicking an anchor link inside mobile menu
+    document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        hamburger.classList.remove('hidden');
+        close.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+</script>

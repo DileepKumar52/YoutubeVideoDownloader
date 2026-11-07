@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const lastUpdated = 'November 2026';
+---
+
+<Layout
+  title="Privacy Policy — StreamFetch"
+  description="Learn how StreamFetch handles user privacy, data security, and ephemeral stream processing with zero tracking and no user accounts."
+  canonicalUrl="https://streamfetch.app/privacy"
+>
+  <Navbar />
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full">
+    <!-- Header -->
+    <div class="mb-10 text-center max-w-2xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#ebebeb] text-[#171717] mb-3 shadow-xs">
+        <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">Transparency & Privacy</span>
+      </div>
+      <h1 class="heading-lg text-[#171717] mb-2">
+        Privacy Policy
+      </h1>
+      <p class="text-xs text-[#8f8f8f]">
+        Last updated: {lastUpdated} • Effective immediately
+      </p>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="space-y-6 text-xs sm:text-sm text-[#4d4d4d] leading-relaxed">
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">1. Our Architectural Privacy Commitment</h2>
+        <p>
+          At StreamFetch, privacy is not merely a legal statement—it is an architectural principle. We engineered our service from the ground up to minimize data collection. You do not need to register, create a profile, or submit an email address to use our YouTube video downloader.
+        </p>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">2. Information We Do Not Collect</h2>
+        <p>
+          Unlike many online web utilities, we do not:
+        </p>
+        <ul class="space-y-2 list-disc list-inside text-xs text-[#4d4d4d]">
+          <li>Require user account creation, passwords, or personal identifying information.</li>
+          <li>Log, index, or store requested YouTube video URLs against individual user IP addresses.</li>
+          <li>Store, archive, or cache downloaded video or audio files on our servers.</li>
+          <li>Deploy third-party behavioral advertising pixels, tracking cookies, or commercial fingerprinting scripts.</li>
+          <li>Sell, lease, or monetize user data with third-party data brokers.</li>
+        </ul>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">3. How Media Streaming & Processing Operates</h2>
+        <p>
+          When you request a download, our server functions as an ephemeral proxy:
+        </p>
+        <p>
+          Media stream chunks are received from the YouTube Content Delivery Network (CDN) and immediately piped into your browser's active download stream. For high-resolution formats requiring multiplexing (such as 1080p video combined with AAC audio), streams are combined in-memory using FFmpeg and piped to your browser in real time. Once the file transfer completes or is cancelled, all temporary in-memory buffers are immediately reclaimed.
+        </p>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">4. Server Log Data & Technical Transmission</h2>
+        <p>
+          Like all standard web servers, ephemeral network routing logs (such as request timestamps and HTTP status codes) may be generated for real-time infrastructure maintenance, DDoS mitigation, and server health diagnostics. These diagnostic logs are retained on a rolling short-term basis and are never correlated with individual users or used to profile downloading habits.
+        </p>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">5. User Correspondence</h2>
+        <p>
+          If you voluntarily contact us via our Contact page or email (e.g. to report a bug or suggest a feature), we collect your name, email address, and message content solely to investigate your inquiry and reply. We do not use this correspondence for marketing purposes.
+        </p>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">6. Third-Party Links & Services</h2>
+        <p>
+          Our site processes links to YouTube, a service provided by Google LLC. When you interact with YouTube content or visit external sites, their respective privacy policies and terms apply. We encourage you to review Google's Privacy Policy to understand how they handle data on their platform.
+        </p>
+      </div>
+
+      <div class="bg-white border border-[#ebebeb] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-base font-semibold text-[#171717]">7. Contact Regarding Privacy</h2>
+        <p>
+          If you have questions about our privacy practices, please contact us at:
+          <a href="mailto:privacy@streamfetch.app" class="text-[#0070f3] hover:underline font-medium ml-1">privacy@streamfetch.app</a>
+          or via our <a href="/contact" class="text-[#0070f3] hover:underline font-medium">Contact Us</a> page.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+

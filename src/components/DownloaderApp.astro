@@ -2,7 +2,7 @@
 // src/components/DownloaderApp.astro
 ---
 
-<div class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-20">
+<section id="downloader" class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-16 scroll-mt-20">
   <!-- Mesh Gradient Bloom (DESIGN.md Hero Accent) -->
   <div class="mesh-gradient-hero" aria-hidden="true"></div>
 
@@ -10,15 +10,15 @@
   <div class="relative z-10 text-center max-w-2xl mx-auto mb-10">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffffff] border border-[#ebebeb] text-[#171717] mb-5 shadow-xs">
       <span class="w-1.5 h-1.5 rounded-full bg-[#0070f3]"></span>
-      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">Direct Stream Extraction</span>
+      <span class="mono-eyebrow text-[11px] text-[#4d4d4d]">1080p Full HD • Audio Extraction • No Ads</span>
     </div>
 
     <h1 class="display-xl text-[#171717] mb-4">
-      Paste a YouTube link.<br />Download clean media.
+      Free YouTube Video Downloader
     </h1>
 
-    <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed max-w-lg mx-auto">
-      Access available video and audio streams with zero ads, no accounts, and direct browser download prompts.
+    <p class="text-sm sm:text-base text-[#4d4d4d] leading-relaxed max-w-xl mx-auto">
+      Download YouTube videos online in 1080p Full HD, 720p HD, or high-bitrate audio directly in your browser. Fast, clean, no accounts, and compatible with desktop, Android, and iPhone.
     </p>
   </div>
 
@@ -310,7 +310,7 @@
       </p>
     </div>
   </div>
-</div>
+</section>
 
 <script>
   // Client-side controller
@@ -481,9 +481,12 @@
               <div class="flex items-center gap-2">
                 <span class="text-sm font-semibold text-[#171717]">${fmt.quality}</span>
                 <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb]">${fmt.container}</span>
+                ${fmt.fps && fmt.fps >= 50 ? `<span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#d3e5ff] text-[#0070f3] border border-[#b8d6ff]">${fmt.fps}fps</span>` : ''}
+                ${fmt.quality.includes('1080') ? `<span class="text-[10px] font-mono font-medium uppercase px-1.5 py-0.5 rounded bg-[#171717] text-white">Full HD</span>` : ''}
+                ${fmt.quality.includes('4K') ? `<span class="text-[10px] font-mono font-medium uppercase px-1.5 py-0.5 rounded bg-[#171717] text-white">4K</span>` : ''}
               </div>
               <div class="text-xs text-[#8f8f8f] mt-0.5">
-                ${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Direct stream'} • Progressive (Audio + Video)
+                ${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Direct stream'} • ${fmt.isAdaptive ? 'Audio + Video (Lossless Sync)' : 'Progressive Stream'}
               </div>
             </div>
           </div>
