@@ -3,34 +3,28 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="w-full border-t border-[#ebebeb] bg-[#fafafa] py-14 mt-auto">
+<footer class="w-full border-t border-[#ebebeb] bg-[#fafafa] py-12 mt-auto">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
-    <!-- Grid of Links & Info -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-[#ebebeb]">
-      <!-- Brand & Mission Column -->
-      <div class="md:col-span-1 space-y-3">
-        <a href="/" class="flex items-center gap-2 text-[#171717] font-semibold tracking-tight">
-          <div class="w-6 h-6 rounded-md bg-[#171717] flex items-center justify-center text-white text-xs">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 ml-0.5" aria-hidden="true">
+    <!-- Clean 4-Column Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-[#ebebeb]">
+      <!-- Logo Section -->
+      <div class="md:col-span-1">
+        <a href="/" class="inline-flex items-center gap-2.5 text-[#171717] font-semibold tracking-tight hover:opacity-90 transition-opacity">
+          <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white text-xs shrink-0 shadow-xs">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
               <path d="M8 5.14v14l11-7-11-7z" />
             </svg>
           </div>
-          <span class="text-sm font-semibold text-[#171717]">StreamFetch</span>
+          <span class="text-sm font-semibold text-[#171717]">YouTube Video Downloader</span>
         </a>
-        <p class="text-xs text-[#8f8f8f] leading-relaxed">
-          High-performance, privacy-conscious YouTube Video Downloader. Direct stream delivery in 1080p Full HD and high-bitrate audio with zero popups or account barriers.
-        </p>
-        <div class="text-[11px] font-mono text-[#8f8f8f] pt-1">
-          Built with Astro & Vercel Geist aesthetic.
-        </div>
       </div>
 
-      <!-- Product Links -->
+      <!-- Product & Tools -->
       <div class="space-y-3">
         <div class="mono-eyebrow text-[11px] text-[#171717]">Product & Tools</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
           <li>
-            <a href="/" class="hover:text-[#171717] transition-colors">Home Downloader</a>
+            <a href="/" class="hover:text-[#171717] transition-colors">YouTube Video Downloader</a>
           </li>
           <li>
             <a href="/#downloader" class="hover:text-[#171717] transition-colors">1080p Full HD Tool</a>
@@ -38,16 +32,10 @@ const currentYear = new Date().getFullYear();
           <li>
             <a href="/#downloader" class="hover:text-[#171717] transition-colors">Audio Extractor (MP4 / M4A)</a>
           </li>
-          <li>
-            <a href="/#faq" class="hover:text-[#171717] transition-colors">Homepage FAQ</a>
-          </li>
-          <li>
-            <a href="/faq" class="hover:text-[#171717] transition-colors">Complete Knowledgebase</a>
-          </li>
         </ul>
       </div>
 
-      <!-- Information & Company Links -->
+      <!-- Information -->
       <div class="space-y-3">
         <div class="mono-eyebrow text-[11px] text-[#171717]">Information</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
@@ -57,16 +45,10 @@ const currentYear = new Date().getFullYear();
           <li>
             <a href="/contact" class="hover:text-[#171717] transition-colors">Contact Us & Support</a>
           </li>
-          <li>
-            <a href="/#how-it-works" class="hover:text-[#171717] transition-colors">How Stream Piping Works</a>
-          </li>
-          <li>
-            <a href="/#troubleshooting" class="hover:text-[#171717] transition-colors">Troubleshooting Guide</a>
-          </li>
         </ul>
       </div>
 
-      <!-- Legal & Compliance Links -->
+      <!-- Legal & Compliance -->
       <div class="space-y-3">
         <div class="mono-eyebrow text-[11px] text-[#171717]">Legal & Compliance</div>
         <ul class="space-y-2 text-xs text-[#4d4d4d]">
@@ -80,20 +62,13 @@ const currentYear = new Date().getFullYear();
             <a href="/disclaimer" class="hover:text-[#171717] transition-colors">Legal Disclaimer</a>
           </li>
         </ul>
-        <p class="text-[11px] text-[#8f8f8f] leading-normal pt-1">
-          Designed strictly for personal archiving and downloading authorized or Creative Commons content.
-        </p>
       </div>
     </div>
 
-    <!-- Bottom Strip: Disclaimer & Copyright -->
-    <div class="pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-[#8f8f8f]">
-      <p class="max-w-3xl leading-relaxed">
-        <strong>Disclaimer:</strong> StreamFetch is an independent web utility and is not affiliated, endorsed, or associated with YouTube, Google LLC, or Alphabet Inc. All product names, logos, and brands are property of their respective owners. Users are solely responsible for ensuring their downloads comply with applicable copyright laws and third-party terms of service.
-      </p>
-
-      <div class="shrink-0 font-mono text-[#8f8f8f]">
-        &copy; {currentYear} StreamFetch. All rights reserved.
+    <!-- Bottom Copyright Only -->
+    <div class="pt-6 flex items-center justify-between text-xs text-[#8f8f8f]">
+      <div>
+        &copy; {currentYear} YouTube Video Downloader. All rights reserved.
       </div>
     </div>
   </div>

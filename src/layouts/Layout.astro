@@ -21,7 +21,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const siteUrl = Astro.site ? Astro.site.origin : 'https://streamfetch.app';
+const siteUrl = Astro.site ? Astro.site.origin : 'https://youtubevideodownloader.app';
 const currentCanonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href.replace(/\/$/, '') || siteUrl;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 
@@ -58,7 +58,7 @@ const structuredDataArray = jsonLd
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:site_name" content="StreamFetch" />
+    <meta property="og:site_name" content="YouTube Video Downloader" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter / X -->

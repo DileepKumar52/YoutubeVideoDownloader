@@ -26,7 +26,11 @@ export async function fetchVideoDetails(videoId: string): Promise<VideoMetadata>
   const durationSec = parseInt(basic.lengthSeconds, 10) || 0;
   const rawFormats = info.formats || [];
 
-  // Find best audio track for estimating combined size of adaptive streams
+  // Determine if video is vertical (Shorts / portrait) or standard horizontal (16:9)
+  const firstVideo = rawFormats.find((f: any) => f.hasVideo && f.width && f.height);
+  const isVertical = firstVideo ? firstVideo.height > firstVideo.width : false;
+
+  // Best audio track for estimating combined size of adaptive streams
   const bestAudio = rawFormats.find((f: any) => f.itag === 140) ||
                     rawFormats.find((f: any) => f.hasAudio && !f.hasVideo);
   const audioBitrate = bestAudio?.bitrate || 128000;
@@ -34,88 +38,132 @@ export async function fetchVideoDetails(videoId: string): Promise<VideoMetadata>
     ? parseInt(bestAudio.contentLength, 10)
     : (audioBitrate * durationSec) / 8;
 
-  // 1. Process Video Formats (both progressive and high-res adaptive streams)
+  // 1. Process Video Formats using the 7 standard resolution tiers in ascending order:
+  // 1. 140p, 2. 360p, 3. 480p, 4. 720p HD, 5. 1080p Full HD, 6. 1280p, 7. 1920p
+  const standardTiers = [
+    {
+      order: 1,
+      quality: '140p',
+      match: (f: any) =>
+        Math.min(f.width || 0, f.height || 0) === 144 ||
+        f.height === 144 ||
+        f.qualityLabel?.startsWith('144p'),
+    },
+    {
+      order: 2,
+      quality: '360p',
+      match: (f: any) =>
+        Math.min(f.width || 0, f.height || 0) === 360 ||
+        f.height === 360 ||
+        f.qualityLabel?.startsWith('360p'),
+    },
+    {
+      order: 3,
+      quality: '480p',
+      match: (f: any) =>
+        Math.min(f.width || 0, f.height || 0) === 480 ||
+        f.height === 480 ||
+        f.qualityLabel?.startsWith('480p'),
+    },
+    {
+      order: 4,
+      quality: '720p HD',
+      match: (f: any) =>
+        !isVertical &&
+        ((f.width === 1280 && f.height === 720) ||
+          (f.height === 720 && (f.width || 0) >= 720) ||
+          f.qualityLabel?.startsWith('720p')),
+    },
+    {
+      order: 5,
+      quality: '1080p Full HD',
+      match: (f: any) =>
+        !isVertical &&
+        ((f.width === 1920 && f.height === 1080) ||
+          (f.height === 1080 && (f.width || 0) >= 1080) ||
+          f.qualityLabel?.startsWith('1080p')),
+    },
+    {
+      order: 6,
+      quality: '1280p',
+      match: (f: any) =>
+        isVertical &&
+        ((f.width === 720 && f.height === 1280) ||
+          f.height === 1280 ||
+          f.qualityLabel?.startsWith('720p')),
+    },
+    {
+      order: 7,
+      quality: '1920p',
+      match: (f: any) =>
+        isVertical &&
+        ((f.width === 1080 && f.height === 1920) ||
+          f.height === 1920 ||
+          f.qualityLabel?.startsWith('1080p')),
+    },
+  ];
+
   const videoFormats: VideoFormatOption[] = [];
-  const seenQualities = new Set<string>();
 
-  // Filter video streams and sort descending by resolution (height), fps, and bitrate
-  const candidateVideos = rawFormats
-    .filter((f: any) => f.hasVideo)
-    .sort((a: any, b: any) => {
-      const hA = a.height || 0;
-      const hB = b.height || 0;
-      if (hB !== hA) return hB - hA;
+  for (const tier of standardTiers) {
+    const candidates = rawFormats
+      .filter((f: any) => f.hasVideo && tier.match(f))
+      .sort((a: any, b: any) => {
+        // Prioritize standard MP4 container
+        const aIsMp4 = a.container === 'mp4' ? 1 : 0;
+        const bIsMp4 = b.container === 'mp4' ? 1 : 0;
+        if (bIsMp4 !== aIsMp4) return bIsMp4 - aIsMp4;
 
-      // Prefer MP4 container with H.264 for maximum compatibility
-      const aIsMp4 = a.container === 'mp4';
-      const bIsMp4 = b.container === 'mp4';
-      if (aIsMp4 && !bIsMp4) return -1;
-      if (!aIsMp4 && bIsMp4) return 1;
+        // Prefer higher frame rate
+        const fpsA = a.fps || 0;
+        const fpsB = b.fps || 0;
+        if (fpsB !== fpsA) return fpsB - fpsA;
 
-      const fpsA = a.fps || 0;
-      const fpsB = b.fps || 0;
-      if (fpsB !== fpsA) return fpsB - fpsA;
+        return (b.bitrate || 0) - (a.bitrate || 0);
+      });
 
-      return (b.bitrate || 0) - (a.bitrate || 0);
-    });
+    if (candidates.length > 0) {
+      const best = candidates[0];
 
-  for (const fmt of candidateVideos) {
-    const height = fmt.height || (fmt.qualityLabel ? parseInt(fmt.qualityLabel, 10) : 360);
-    const fps = fmt.fps || 30;
-    const is60fps = fps >= 50;
+      let totalBytes = 0;
+      if (best.contentLength) {
+        totalBytes = parseInt(best.contentLength, 10);
+      } else if (best.bitrate && durationSec > 0) {
+        totalBytes = (best.bitrate * durationSec) / 8;
+      }
 
-    // Deduplicate by resolution tier (e.g., 1080p, 720p, 480p, 360p)
-    const qualityKey = `${height}p${is60fps ? '60' : ''}`;
-    if (seenQualities.has(qualityKey)) continue;
-    seenQualities.add(qualityKey);
+      if (!best.hasAudio && totalBytes > 0) {
+        totalBytes += audioSizeBytes;
+      }
 
-    // Human-friendly quality badge
-    let qualityLabel = `${height}p`;
-    if (is60fps) qualityLabel += '60';
-    if (height >= 2160) qualityLabel += ' 4K Ultra HD';
-    else if (height >= 1440) qualityLabel += ' 2K QHD';
-    else if (height >= 1080) qualityLabel += ' Full HD';
-    else if (height >= 720) qualityLabel += ' HD';
+      const sizeMb = totalBytes > 0
+        ? Math.round((totalBytes / (1024 * 1024)) * 10) / 10
+        : null;
 
-    // Calculate realistic file size: for adaptive streams, add the audio track size
-    let totalBytes = 0;
-    if (fmt.contentLength) {
-      totalBytes = parseInt(fmt.contentLength, 10);
-    } else if (fmt.bitrate && durationSec > 0) {
-      totalBytes = (fmt.bitrate * durationSec) / 8;
+      videoFormats.push({
+        itag: best.itag,
+        type: 'video',
+        quality: tier.quality,
+        container: best.container || 'mp4',
+        mimeType: best.mimeType || 'video/mp4',
+        hasAudio: true, // Losslessly remuxed with audio when downloaded
+        hasVideo: true,
+        fps: best.fps,
+        approxSizeMb: sizeMb,
+        bitrate: best.bitrate,
+        isAdaptive: !best.hasAudio,
+        requiresMuxing: !best.hasAudio,
+      });
     }
-
-    if (!fmt.hasAudio && totalBytes > 0) {
-      totalBytes += audioSizeBytes;
-    }
-
-    const sizeMb = totalBytes > 0
-      ? Math.round((totalBytes / (1024 * 1024)) * 10) / 10
-      : null;
-
-    videoFormats.push({
-      itag: fmt.itag,
-      type: 'video',
-      quality: qualityLabel,
-      container: fmt.container || 'mp4',
-      mimeType: fmt.mimeType || 'video/mp4',
-      hasAudio: true, // Output file will include audio (via progressive or FFmpeg remux)
-      hasVideo: true,
-      fps: fmt.fps,
-      approxSizeMb: sizeMb,
-      bitrate: fmt.bitrate,
-      isAdaptive: !fmt.hasAudio,
-      requiresMuxing: !fmt.hasAudio,
-    });
   }
 
-  // 2. Process Audio Formats (Audio only)
+  // 2. Process Audio Formats (Audio only) sorted ascending by bitrate
   const audioFormats: VideoFormatOption[] = [];
   const seenAudioBitrates = new Set<number>();
 
   const candidateAudio = rawFormats
     .filter((f: any) => f.hasAudio && !f.hasVideo)
-    .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
+    .sort((a: any, b: any) => (a.bitrate || 0) - (b.bitrate || 0));
 
   for (const fmt of candidateAudio) {
     const kbps = fmt.audioBitrate || (fmt.bitrate ? Math.round(fmt.bitrate / 1000) : 128);

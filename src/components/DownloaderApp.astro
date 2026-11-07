@@ -2,7 +2,7 @@
 // src/components/DownloaderApp.astro
 ---
 
-<section id="downloader" class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-16 scroll-mt-20">
+<section id="downloader" class="relative w-full max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-12 scroll-mt-20">
   <!-- Mesh Gradient Bloom (DESIGN.md Hero Accent) -->
   <div class="mesh-gradient-hero" aria-hidden="true"></div>
 
@@ -23,7 +23,7 @@
   </div>
 
   <!-- Input Form Container -->
-  <div class="relative z-10 mb-6">
+  <div class="relative z-10 mb-8">
     <form id="url-form" class="w-full" onsubmit="return false;">
       <div class="bg-white border border-[#ebebeb] hover:border-[#a1a1a1] focus-within:border-[#171717] focus-within:ring-1 focus-within:ring-[#171717] transition-all rounded-2xl p-2 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
         <!-- Input Field & Icons -->
@@ -87,26 +87,6 @@
         </div>
       </div>
     </form>
-
-    <!-- Quick Sample Links -->
-    <div class="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-[#8f8f8f]">
-      <span>Quick sample:</span>
-      <button
-        type="button"
-        class="sample-link font-mono hover:text-[#171717] underline decoration-[#ebebeb] hover:decoration-[#171717] transition-colors cursor-pointer"
-        data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-      >
-        Rick Astley (Remaster)
-      </button>
-      <span>•</span>
-      <button
-        type="button"
-        class="sample-link font-mono hover:text-[#171717] underline decoration-[#ebebeb] hover:decoration-[#171717] transition-colors cursor-pointer"
-        data-url="https://www.youtube.com/watch?v=aqz-KE-bpKQ"
-      >
-        Big Buck Bunny (4K 60fps)
-      </button>
-    </div>
   </div>
 
   <!-- Loading State -->
@@ -120,7 +100,7 @@
       </div>
       <h3 class="text-base font-semibold text-[#171717] mb-1">Inspecting Video Streams</h3>
       <p class="text-xs text-[#8f8f8f] leading-relaxed">
-        Querying YouTube InnerTube manifests, deciphering video URLs and resolving format availability...
+        Querying YouTube manifests, resolving format availability, and preparing download options...
       </p>
     </div>
   </div>
@@ -144,7 +124,7 @@
       <button
         id="dismiss-error-btn"
         type="button"
-        class="text-[#991b1b] hover:text-[#7f1d1d] p-1 rounded-md text-xs font-mono"
+        class="text-[#991b1b] hover:text-[#7f1d1d] p-1 rounded-md text-xs font-mono cursor-pointer"
       >
         Dismiss
       </button>
@@ -244,12 +224,12 @@
         </div>
 
         <!-- Video Formats List -->
-        <div id="video-list" class="space-y-3">
+        <div id="video-list" class="space-y-2.5">
           <!-- Populated by client script -->
         </div>
 
         <!-- Audio Formats List -->
-        <div id="audio-list" class="space-y-3 hidden">
+        <div id="audio-list" class="space-y-2.5 hidden">
           <!-- Populated by client script -->
         </div>
 
@@ -269,7 +249,7 @@
   </div>
 
   <!-- Feature Value Props Strip (DESIGN.md feature-cards) -->
-  <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
+  <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
     <div class="bg-white border border-[#ebebeb] rounded-xl p-5 shadow-xs">
       <div class="w-8 h-8 rounded-lg bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#171717] mb-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -316,11 +296,11 @@
   // Client-side controller
   let currentVideoData = null;
 
-  const urlInput = document.getElementById('url-input');
+  const urlInput = document.getElementById('url-input') as HTMLInputElement | null;
   const clearBtn = document.getElementById('clear-btn');
   const pasteBtn = document.getElementById('paste-btn');
   const urlForm = document.getElementById('url-form');
-  const submitBtn = document.getElementById('submit-btn');
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
   const submitBtnText = document.getElementById('submit-btn-text');
 
   const loadingContainer = document.getElementById('loading-container');
@@ -330,13 +310,13 @@
   const dismissErrorBtn = document.getElementById('dismiss-error-btn');
 
   const resultContainer = document.getElementById('result-container');
-  const videoThumbnail = document.getElementById('video-thumbnail');
+  const videoThumbnail = document.getElementById('video-thumbnail') as HTMLImageElement | null;
   const videoDuration = document.getElementById('video-duration');
   const videoTitle = document.getElementById('video-title');
   const videoAuthor = document.getElementById('video-author');
   const videoViews = document.getElementById('video-views');
   const videoIdBadge = document.getElementById('video-id-badge');
-  const videoWatchLink = document.getElementById('video-watch-link');
+  const videoWatchLink = document.getElementById('video-watch-link') as HTMLAnchorElement | null;
 
   const tabVideo = document.getElementById('tab-video');
   const tabAudio = document.getElementById('tab-audio');
@@ -346,84 +326,83 @@
   const downloadStatusText = document.getElementById('download-status-text');
 
   // Input events
-  urlInput.addEventListener('input', () => {
-    clearBtn.classList.toggle('hidden', !urlInput.value.trim());
-  });
+  if (urlInput && clearBtn) {
+    urlInput.addEventListener('input', () => {
+      clearBtn.classList.toggle('hidden', !urlInput.value.trim());
+    });
 
-  clearBtn.addEventListener('click', () => {
-    urlInput.value = '';
-    clearBtn.classList.add('hidden');
-    urlInput.focus();
-  });
+    clearBtn.addEventListener('click', () => {
+      urlInput.value = '';
+      clearBtn.classList.add('hidden');
+      urlInput.focus();
+    });
+  }
 
   // Paste button
-  pasteBtn.addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      if (text) {
-        urlInput.value = text.trim();
-        clearBtn.classList.remove('hidden');
-        processUrl(urlInput.value);
-      }
-    } catch (err) {
-      // Clipboard permission denied or unsupported
-      urlInput.focus();
-    }
-  });
-
-  // Form submit
-  urlForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    processUrl(urlInput.value);
-  });
-
-  // Quick sample links
-  document.querySelectorAll('.sample-link').forEach((link) => {
-    link.addEventListener('click', () => {
-      const url = link.getAttribute('data-url');
-      if (url) {
-        urlInput.value = url;
-        clearBtn.classList.remove('hidden');
-        processUrl(url);
+  if (pasteBtn && urlInput && clearBtn) {
+    pasteBtn.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          urlInput.value = text.trim();
+          clearBtn.classList.remove('hidden');
+          processUrl(urlInput.value);
+        }
+      } catch (err) {
+        urlInput.focus();
       }
     });
-  });
+  }
+
+  // Form submit
+  if (urlForm && urlInput) {
+    urlForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      processUrl(urlInput.value);
+    });
+  }
 
   // Dismiss error
-  dismissErrorBtn.addEventListener('click', () => {
-    errorContainer.classList.add('hidden');
-  });
+  if (dismissErrorBtn && errorContainer) {
+    dismissErrorBtn.addEventListener('click', () => {
+      errorContainer.classList.add('hidden');
+    });
+  }
 
   // Format tab switching
-  tabVideo.addEventListener('click', () => {
-    tabVideo.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#171717] text-white transition-all cursor-pointer shadow-xs';
-    tabAudio.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-[#ebebeb] text-[#4d4d4d] hover:text-[#171717] transition-all cursor-pointer';
-    videoList.classList.remove('hidden');
-    audioList.classList.add('hidden');
-  });
+  if (tabVideo && tabAudio && videoList && audioList) {
+    tabVideo.addEventListener('click', () => {
+      tabVideo.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#171717] text-white transition-all cursor-pointer shadow-xs';
+      tabAudio.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-[#ebebeb] text-[#4d4d4d] hover:text-[#171717] transition-all cursor-pointer';
+      videoList.classList.remove('hidden');
+      audioList.classList.add('hidden');
+    });
 
-  tabAudio.addEventListener('click', () => {
-    tabAudio.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#171717] text-white transition-all cursor-pointer shadow-xs';
-    tabVideo.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-[#ebebeb] text-[#4d4d4d] hover:text-[#171717] transition-all cursor-pointer';
-    audioList.classList.remove('hidden');
-    videoList.classList.add('hidden');
-  });
+    tabAudio.addEventListener('click', () => {
+      tabAudio.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#171717] text-white transition-all cursor-pointer shadow-xs';
+      tabVideo.className = 'format-tab px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-[#ebebeb] text-[#4d4d4d] hover:text-[#171717] transition-all cursor-pointer';
+      audioList.classList.remove('hidden');
+      videoList.classList.add('hidden');
+    });
+  }
 
   // Fetch video details
-  async function processUrl(input) {
+  async function processUrl(input: string) {
     const trimmed = (input || '').trim();
     if (!trimmed) {
       showError('Input Required', 'Please paste a valid YouTube video URL or ID.');
-      urlInput.focus();
+      urlInput?.focus();
       return;
     }
 
     // Reset states
     hideError();
-    resultContainer.classList.add('hidden');
-    loadingContainer.classList.remove('hidden');
-    submitBtn.disabled = true;
-    submitBtnText.textContent = 'Processing...';
+    resultContainer?.classList.add('hidden');
+    loadingContainer?.classList.remove('hidden');
+    if (submitBtn && submitBtnText) {
+      submitBtn.disabled = true;
+      submitBtnText.textContent = 'Processing...';
+    }
 
     try {
       const res = await fetch(`/api/info?url=${encodeURIComponent(trimmed)}`);
@@ -435,155 +414,168 @@
 
       currentVideoData = json.data;
       renderVideoResult(currentVideoData);
-    } catch (err) {
+    } catch (err: any) {
       showError('Extraction Error', err.message || 'An unexpected error occurred while processing the video.');
     } finally {
-      loadingContainer.classList.add('hidden');
-      submitBtn.disabled = false;
-      submitBtnText.textContent = 'Fetch Options';
+      loadingContainer?.classList.add('hidden');
+      if (submitBtn && submitBtnText) {
+        submitBtn.disabled = false;
+        submitBtnText.textContent = 'Fetch Options';
+      }
     }
   }
 
-  function renderVideoResult(data) {
-    videoThumbnail.src = data.thumbnailUrl;
-    videoDuration.textContent = data.durationFormatted;
-    videoTitle.textContent = data.title;
-    videoAuthor.textContent = data.author;
-    videoViews.textContent = data.viewCountFormatted;
-    videoIdBadge.textContent = `ID: ${data.id}`;
-    videoWatchLink.href = data.url;
+  function renderVideoResult(data: any) {
+    if (videoThumbnail) videoThumbnail.src = data.thumbnailUrl;
+    if (videoDuration) videoDuration.textContent = data.durationFormatted;
+    if (videoTitle) videoTitle.textContent = data.title;
+    if (videoAuthor) videoAuthor.textContent = data.author;
+    if (videoViews) videoViews.textContent = data.viewCountFormatted;
+    if (videoIdBadge) videoIdBadge.textContent = `ID: ${data.id}`;
+    if (videoWatchLink) videoWatchLink.href = data.url;
 
-    // Render Video Formats
-    videoList.innerHTML = '';
-    const videoFormats = data.formats.video || [];
+    // Render Video Formats (Uniform rows, consistent alignment)
+    if (videoList) {
+      videoList.innerHTML = '';
+      const videoFormats = data.formats.video || [];
 
-    if (videoFormats.length === 0) {
-      videoList.innerHTML = `
-        <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
-          No direct progressive video streams available for this video. Please check the Audio tab or try another video.
-        </div>
-      `;
-    } else {
-      videoFormats.forEach((fmt) => {
-        const item = document.createElement('div');
-        item.className = 'bg-white border border-[#ebebeb] hover:border-[#171717]/30 transition-all rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-4 shadow-xs';
-        item.innerHTML = `
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-8 h-8 rounded-lg bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#171717] shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
-                <line x1="7" y1="2" x2="7" y2="22"></line>
-                <line x1="17" y1="2" x2="17" y2="22"></line>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-semibold text-[#171717]">${fmt.quality}</span>
-                <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb]">${fmt.container}</span>
-                ${fmt.fps && fmt.fps >= 50 ? `<span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#d3e5ff] text-[#0070f3] border border-[#b8d6ff]">${fmt.fps}fps</span>` : ''}
-                ${fmt.quality.includes('1080') ? `<span class="text-[10px] font-mono font-medium uppercase px-1.5 py-0.5 rounded bg-[#171717] text-white">Full HD</span>` : ''}
-                ${fmt.quality.includes('4K') ? `<span class="text-[10px] font-mono font-medium uppercase px-1.5 py-0.5 rounded bg-[#171717] text-white">4K</span>` : ''}
-              </div>
-              <div class="text-xs text-[#8f8f8f] mt-0.5">
-                ${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Direct stream'} • ${fmt.isAdaptive ? 'Audio + Video (Lossless Sync)' : 'Progressive Stream'}
-              </div>
-            </div>
+      if (videoFormats.length === 0) {
+        videoList.innerHTML = `
+          <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
+            No video streams available for this video. Please check the Audio tab.
           </div>
-
-          <button
-            type="button"
-            class="download-action-btn shrink-0 px-4 py-2 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] flex items-center gap-1.5 shadow-xs cursor-pointer"
-            data-itag="${fmt.itag}"
-            data-type="video"
-            data-title="${encodeURIComponent(data.title)}"
-          >
-            <span>Download</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </button>
         `;
-        videoList.appendChild(item);
-      });
+      } else {
+        videoFormats.forEach((fmt: any) => {
+          const item = document.createElement('div');
+          item.className = 'bg-white border border-[#ebebeb] hover:border-[#171717]/40 transition-all rounded-xl px-4 py-3 flex items-center justify-between gap-4 shadow-xs';
+          item.innerHTML = `
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div class="w-8 h-8 rounded-lg bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#171717] shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                  <line x1="7" y1="2" x2="7" y2="22"></line>
+                  <line x1="17" y1="2" x2="17" y2="22"></line>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-sm font-semibold text-[#171717] tracking-tight">${fmt.quality}</span>
+                  <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb] font-medium">${fmt.container}</span>
+                  ${fmt.fps && fmt.fps >= 50 ? `<span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#d3e5ff] text-[#0070f3] border border-[#b8d6ff] font-medium">${fmt.fps}fps</span>` : ''}
+                </div>
+                <div class="text-xs text-[#8f8f8f] mt-0.5 flex items-center gap-2">
+                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Direct Stream'}</span>
+                  <span>•</span>
+                  <span>${fmt.isAdaptive ? 'Audio + Video (Lossless Sync)' : 'Progressive Stream'}</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="download-action-btn shrink-0 w-28 h-9 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+              data-itag="${fmt.itag}"
+              data-type="video"
+              data-title="${encodeURIComponent(data.title)}"
+            >
+              <span>Download</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
+          `;
+          videoList.appendChild(item);
+        });
+      }
     }
 
-    // Render Audio Formats
-    audioList.innerHTML = '';
-    const audioFormats = data.formats.audio || [];
+    // Render Audio Formats (Uniform rows, matching dimensions)
+    if (audioList) {
+      audioList.innerHTML = '';
+      const audioFormats = data.formats.audio || [];
 
-    if (audioFormats.length === 0) {
-      audioList.innerHTML = `
-        <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
-          No separate audio streams found.
-        </div>
-      `;
-    } else {
-      audioFormats.forEach((fmt) => {
-        const item = document.createElement('div');
-        item.className = 'bg-white border border-[#ebebeb] hover:border-[#171717]/30 transition-all rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-4 shadow-xs';
-        item.innerHTML = `
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-8 h-8 rounded-lg bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#171717] shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 18V5l12-2v13"></path>
-                <circle cx="6" cy="18" r="3"></circle>
-                <circle cx="18" cy="16" r="3"></circle>
-              </svg>
-            </div>
-            <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-semibold text-[#171717]">${fmt.quality}</span>
-                <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb]">${fmt.container}</span>
-              </div>
-              <div class="text-xs text-[#8f8f8f] mt-0.5">
-                ${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Audio track'} • Original Bitrate
-              </div>
-            </div>
+      if (audioFormats.length === 0) {
+        audioList.innerHTML = `
+          <div class="p-4 rounded-xl bg-white border border-[#ebebeb] text-xs text-[#8f8f8f] text-center">
+            No separate audio streams found.
           </div>
-
-          <button
-            type="button"
-            class="download-action-btn shrink-0 px-4 py-2 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] flex items-center gap-1.5 shadow-xs cursor-pointer"
-            data-itag="${fmt.itag}"
-            data-type="audio"
-            data-title="${encodeURIComponent(data.title)}"
-          >
-            <span>Download</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </button>
         `;
-        audioList.appendChild(item);
-      });
+      } else {
+        audioFormats.forEach((fmt: any) => {
+          const item = document.createElement('div');
+          item.className = 'bg-white border border-[#ebebeb] hover:border-[#171717]/40 transition-all rounded-xl px-4 py-3 flex items-center justify-between gap-4 shadow-xs';
+          item.innerHTML = `
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div class="w-8 h-8 rounded-lg bg-[#fafafa] border border-[#ebebeb] flex items-center justify-center text-[#171717] shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18V5l12-2v13"></path>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-sm font-semibold text-[#171717] tracking-tight">${fmt.quality}</span>
+                  <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#4d4d4d] border border-[#ebebeb] font-medium">${fmt.container}</span>
+                </div>
+                <div class="text-xs text-[#8f8f8f] mt-0.5 flex items-center gap-2">
+                  <span>${fmt.approxSizeMb ? `~ ${fmt.approxSizeMb} MB` : 'Audio track'}</span>
+                  <span>•</span>
+                  <span>Original Audio Fidelity</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="download-action-btn shrink-0 w-28 h-9 rounded-xl bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+              data-itag="${fmt.itag}"
+              data-type="audio"
+              data-title="${encodeURIComponent(data.title)}"
+            >
+              <span>Download</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
+          `;
+          audioList.appendChild(item);
+        });
+      }
     }
 
     // Attach click listeners to download buttons
     document.querySelectorAll('.download-action-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const itag = btn.getAttribute('data-itag');
-        const type = btn.getAttribute('data-type');
-        triggerDownload(data.id, itag, type);
+        const type = btn.getAttribute('data-type') || 'video';
+        if (itag) {
+          triggerDownload(data.id, itag, type);
+        }
       });
     });
 
-    resultContainer.classList.remove('hidden');
-    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (resultContainer) {
+      resultContainer.classList.remove('hidden');
+      resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }
 
-  function triggerDownload(id, itag, type) {
-    downloadProgressBanner.classList.remove('hidden');
-    downloadStatusText.textContent = 'Contacting YouTube CDN & transferring stream...';
+  function triggerDownload(id: string, itag: string, type: string) {
+    if (downloadProgressBanner && downloadStatusText) {
+      downloadProgressBanner.classList.remove('hidden');
+      downloadStatusText.textContent = 'Contacting YouTube CDN & transferring stream...';
+    }
 
     // Direct browser download prompt via download URL
     const downloadUrl = `/api/download?id=${encodeURIComponent(id)}&itag=${encodeURIComponent(itag)}&type=${encodeURIComponent(type)}`;
 
-    // Create an invisible download anchor to trigger native save dialog
     const a = document.createElement('a');
     a.href = downloadUrl;
     a.setAttribute('download', '');
@@ -591,24 +583,24 @@
     a.click();
     document.body.removeChild(a);
 
-    // Keep banner informative
     setTimeout(() => {
-      downloadStatusText.textContent = 'Stream requested! Check your browser downloads.';
+      if (downloadStatusText) {
+        downloadStatusText.textContent = 'Stream requested! Check your browser downloads.';
+      }
     }, 2500);
 
     setTimeout(() => {
-      downloadProgressBanner.classList.add('hidden');
+      downloadProgressBanner?.classList.add('hidden');
     }, 10000);
   }
 
-  function showError(title, msg) {
-    errorTitle.textContent = title;
-    errorMessage.textContent = msg;
-    errorContainer.classList.remove('hidden');
+  function showError(title: string, msg: string) {
+    if (errorTitle) errorTitle.textContent = title;
+    if (errorMessage) errorMessage.textContent = msg;
+    errorContainer?.classList.remove('hidden');
   }
 
   function hideError() {
-    errorContainer.classList.add('hidden');
+    errorContainer?.classList.add('hidden');
   }
 </script>
-

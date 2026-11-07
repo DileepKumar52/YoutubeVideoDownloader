@@ -10,17 +10,16 @@ const isHome = pathname === '/';
     <a
       href="/"
       class="flex items-center gap-2.5 text-[#171717] font-semibold text-base tracking-tight hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0070f3] rounded-md px-1 py-0.5"
-      aria-label="StreamFetch Home"
+      aria-label="YouTube Video Downloader Home"
     >
-      <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white shadow-xs">
+      <div class="w-7 h-7 rounded-md bg-[#171717] flex items-center justify-center text-white shadow-xs shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
           <path d="M8 5.14v14l11-7-11-7z" />
         </svg>
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="tracking-tight text-sm sm:text-base font-semibold text-[#171717]">StreamFetch</span>
-        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#f2f2f2] text-[#8f8f8f] border border-[#ebebeb]">1080p</span>
-      </div>
+      <span class="tracking-tight text-sm sm:text-base font-semibold text-[#171717] whitespace-nowrap">
+        YouTube Video Downloader
+      </span>
     </a>
 
     <!-- Desktop Navigation Links -->
@@ -69,18 +68,8 @@ const isHome = pathname === '/';
       </a>
     </nav>
 
-    <!-- Desktop Status Badge & CTA -->
+    <!-- Desktop CTA: Paste Link Button -->
     <div class="hidden sm:flex items-center gap-3 shrink-0">
-      <div class="flex items-center gap-1.5 text-xs text-[#8f8f8f] font-mono">
-        <span class="relative flex h-2 w-2" aria-hidden="true">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span>Online</span>
-      </div>
-
-      <div class="h-4 w-[1px] bg-[#ebebeb]"></div>
-
       <a
         href={isHome ? '#downloader' : '/#downloader'}
         class="px-3.5 py-1.5 rounded-md bg-[#171717] hover:bg-black text-white text-xs font-medium tracking-tight transition-all active:scale-[0.98] shadow-xs"
@@ -161,10 +150,12 @@ const isHome = pathname === '/';
 
       <div class="pt-3 mt-1 border-t border-[#ebebeb] flex items-center justify-between text-xs text-[#8f8f8f]">
         <span>No auth • No advertisements</span>
-        <span class="inline-flex items-center gap-1 font-mono text-[11px] text-emerald-600">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-          Ready
-        </span>
+        <a
+          href={isHome ? '#downloader' : '/#downloader'}
+          class="mobile-nav-link font-medium text-[#171717] underline decoration-[#ebebeb]"
+        >
+          Paste Link
+        </a>
       </div>
     </nav>
   </div>
